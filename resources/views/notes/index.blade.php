@@ -421,6 +421,22 @@
 
         <div class="controls">
             <div class="control-group">
+                <label>🔑 Autenticación</label>
+                <div class="control-buttons">
+                    @auth
+                        <span style="align-self: center; margin-right: 10px;">Hola, {{ Auth::user()->name }}</span>
+                        <form action="{{ route('logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-secondary">Cerrar Sesión</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-secondary">Iniciar Sesión</a>
+                        <a href="{{ route('register') }}" class="btn btn-primary">Registrarse</a>
+                    @endauth
+                </div>
+            </div>
+
+            <div class="control-group">
                 <label>🚀 Acciones</label>
                 <div class="control-buttons">
                     <a href="/notes/create" class="btn btn-primary">

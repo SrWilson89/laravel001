@@ -1,0 +1,57 @@
+### Guía de Comandos Esenciales para Linux Mint
+
+---
+
+**Navegación y Gestión de Archivos**
+
+* **ls:** Lista los archivos y carpetas en tu ubicación.
+    -   `ls -l` - Muestra detalles como permisos y tamaño.
+* **cd:** Te permite moverte entre directorios.
+    -   `cd Documentos` - Mueve a la carpeta "Documentos".
+    -   `cd ..` - Mueve a la carpeta anterior.
+* **pwd:** Muestra el camino completo de tu ubicación actual.
+* **mkdir:** Crea una nueva carpeta.
+    -   `mkdir Proyectos` - Crea una carpeta llamada "Proyectos".
+* **cp:** Copia archivos o directorios.
+    -   `cp archivo.txt /ruta/destino/`
+* **mv:** Mueve o renombra archivos y directorios.
+    -   `mv archivo.txt nuevo_nombre.txt`
+* **rm:** Elimina archivos. ¡Cuidado, es permanente!
+    -   `rm archivo.txt`
+* **cat:** Muestra el contenido de un archivo de texto en la terminal.
+    -   `cat mi_texto.txt`
+* **nano:** Editor de texto simple para la terminal.
+    -   `nano mi_texto.txt`
+
+---
+
+**Instalación y Actualización de Software**
+
+* **sudo apt update:** Actualiza la lista de paquetes disponibles.
+* **sudo apt upgrade:** Instala las actualizaciones de todos tus programas.
+* **sudo apt install:** Instala un nuevo programa.
+    -   `sudo apt install vlc`
+* **sudo apt remove:** Desinstala un programa.
+    -   `sudo apt remove vlc`
+
+---
+
+**Información del Sistema**
+
+* **df -h:** Muestra el espacio libre en tus discos.
+* **free -h:** Muestra la memoria RAM libre y usada.
+* **top:** Gestor de tareas en tiempo real.
+* **uname -a:** Muestra información sobre tu sistema operativo.
+* **whoami:** Te dice el nombre del usuario actual.
+
+---
+
+**Permisos y Usuarios**
+
+* **sudo:** Ejecuta un comando con permisos de administrador.
+* **chown:** Cambia el propietario de un archivo.
+    -   `sudo chown usuario archivo.txt`
+
+---
+
+Esta guía te da una base sólida para trabajar en la terminal de Linux. Puedes usar el comando **man** para obtener más detalles sobre cualquier comando.

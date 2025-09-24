@@ -1,26 +1,27 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
+use Illuminate\Support\Facades\Auth; // Agrega esta línea para usar Auth::routes()
 use App\Http\Controllers\NoteController;
+use App\Http\Controllers\LikeController;
 
-// Muestra el formulario para crear una nota
-Route::get('/notes/create', [NoteController::class, 'create']);
+// La ruta de inicio ahora usa el controlador de notas directamente
+Route::get('/', [NoteController::class, 'index'])->name('notes.index');
 
-// Procesa el formulario y guarda la nota
-Route::post('/notes', [NoteController::class, 'store']);
+// Rutas para la gestión de notas
+// Usamos named routes, una buena práctica en Laravel
+Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
+Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+Route::get('/notes/{note}/edit', [NoteController::class, 'edit'])->name('notes.edit');
+Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
+Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
-Route::get('/', [NoteController::class, 'index']); // Agregamos esta línea
+// Rutas para la funcionalidad de 'likes' (protegidas por middleware de autenticación)
+Route::post('/notes/{note}/like', [LikeController::class, 'store'])->middleware('auth')->name('notes.like');
+Route::delete('/notes/{note}/unlike', [LikeController::class, 'destroy'])->middleware('auth')->name('notes.unlike');
 
-// Muestra el formulario para editar una nota
-Route::get('/notes/{id}/edit', [NoteController::class, 'edit']);
+// Esto registra todas las rutas de autenticación (login, register, logout, etc.)
+Auth::routes();
+Auth::routes();
 
-// Actualiza los datos de la nota
-Route::put('/notes/{id}', [NoteController::class, 'update']);
-
-// Elimina una nota de la base de datos
-Route::delete('/notes/{id}', [NoteController::class, 'destroy']);
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

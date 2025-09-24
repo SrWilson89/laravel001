@@ -123,6 +123,13 @@
                     <option value="bg-lightpurple" {{ ($note->color_class ?? '') == 'bg-lightpurple' ? 'selected' : '' }}>Morado</option>
                 </select>
             </div>
+                    
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="is_public" id="is_public" value="1">
+                <label class="form-check-label" for="is_public">
+                    Hacer esta nota pública
+                </label>
+            </div>
 
             <button type="submit" class="btn btn-primary">
                 Guardar Cambios
