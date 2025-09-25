@@ -4,58 +4,62 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Notifications\NoteDeletedNotification; // Importa la notificación
 
 class NoteController extends Controller
 {
     /**
-     * Muestra la lista de notas.
-     * Solo muestra las notas del usuario autenticado.
+     * Display a listing of the resource.
      */
     public function index()
     {
-        // Obtiene todas las notas que son públicas
-        $publicNotes = Note::where('is_public', true)->get();
-
-        // Obtiene solo las notas del usuario autenticado
-        $myNotes = [];
-        if (Auth::check()) {
-            $myNotes = Auth::user()->notes()->get();
-        }
-
-        // Combina ambas colecciones de notas en una sola
-        $notes = $publicNotes->merge($myNotes)->unique('id');
+        $notes = auth()->user()->notes;
 
         return view('notes.index', compact('notes'));
     }
 
     /**
-     * Guarda una nueva nota en la base de datos.
-     * Asigna la nota al usuario autenticado.
+     * Show the form for creating a new resource.
      */
-    public function store(Request $request)
+    public function create()
     {
-        $validatedData = $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'color_class' => 'nullable|string',
-            'is_public' => 'boolean', // Asegúrate de validar el campo
-        ]);
-
-        // Asigna la nota al usuario autenticado usando la relación
-        Auth::user()->notes()->create($validatedData);
-
-        return redirect()->route('notes.index')->with('success', 'Nota creada exitosamente.');
+        return view('notes.create');
     }
 
     /**
-     * Muestra el formulario para editar una nota.
+     * Store a newly created resource in storage.
      */
-    public function edit(Note $note)
+    public function store(Request $request)
     {
-        // Asegúrate de que solo el dueño de la nota pueda editarla
-        if ($note->user_id !== Auth::id()) {
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+        ]);
+
+        Note::create([
+            'user_id' => auth()->id(),
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+        ]);
+
+        return redirect()->route('notes.index')->with('success', '¡Nota creada con éxito!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        // Este método aún no ha sido implementado.
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $note = Note::findOrFail($id);
+
+        if ($note->user_id !== auth()->id()) {
             abort(403);
         }
 
@@ -63,48 +67,39 @@ class NoteController extends Controller
     }
 
     /**
-     * Actualiza los datos de la nota en la base de datos.
+     * Update the specified resource in storage.
      */
-    public function update(Request $request, Note $note)
+    public function update(Request $request, string $id)
     {
-        // Asegúrate de que solo el dueño de la nota pueda actualizarla
-        if ($note->user_id !== Auth::id()) {
+        $note = Note::findOrFail($id);
+
+        if ($note->user_id !== auth()->id()) {
             abort(403);
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
-            'color_class' => 'nullable|string',
         ]);
 
-        $note->update($request->all());
+        $note->update($validated);
 
-        return redirect()->route('notes.index')->with('success', 'Nota actualizada exitosamente.');
+        return redirect()->route('notes.index')->with('success', '¡Nota actualizada con éxito!');
     }
 
-/**
- * Elimina una nota de la base de datos.
- * Admins pueden eliminar cualquier nota y notificar al dueño.
- * Usuarios normales solo pueden eliminar sus propias notas.
- */
-public function destroy(Note $note)
-{
-    if (Auth::user()->role === 'admin') {
-        // Si la nota no pertenece al admin que la borra, envía la notificación
-        if ($note->user_id !== Auth::id()) {
-            $note->user->notify(new NoteDeletedNotification($note->title, 'Contenido inapropiado.'));
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $note = Note::findOrFail($id);
+
+        if ($note->user_id !== auth()->id()) {
+            abort(403);
         }
+
         $note->delete();
-        return redirect()->route('notes.index')->with('success', 'Nota eliminada exitosamente.');
-    }
 
-    // Lógica para usuarios normales
-    if ($note->user_id !== Auth::id()) {
-        abort(403);
+        return redirect()->route('notes.index')->with('success', '¡Nota eliminada con éxito!');
     }
-    $note->delete();
-    return redirect()->route('notes.index')->with('success', 'Nota eliminada exitosamente.');
-}
-
 }
