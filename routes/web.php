@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HomeController; // Agrega esta línea para el controlador de Home
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,6 +31,9 @@ Route::middleware(['auth'])->group(function () {
     // Rutas para el perfil del usuario
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
+    // Nueva ruta para actualizar la contraseña
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
 
     // Rutas para la gestión de notas
     Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');

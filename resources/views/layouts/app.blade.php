@@ -15,7 +15,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             </nav>
 
-        <main class="py-4">
+        <main class="container py-4">
             @yield('content')
         </main>
     </div>

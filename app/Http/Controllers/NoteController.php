@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Note;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
@@ -12,7 +13,20 @@ class NoteController extends Controller
      */
     public function index()
     {
-        $notes = auth()->user()->notes;
+        $user = Auth::user();
+
+        if ($user->role === 'admin') {
+            // El administrador ve todas las notas
+            $notes = Note::all();
+        } else {
+            // Los usuarios normales y VIP ven sus propias notas (públicas y privadas) y las notas públicas de otros usuarios.
+            $notes = Note::where('user_id', $user->id)
+                         ->orWhere(function ($query) {
+                             $query->where('is_public', true)
+                                   ->where('user_id', '!=', auth()->id());
+                         })
+                         ->get();
+        }
 
         return view('notes.index', compact('notes'));
     }
@@ -33,12 +47,16 @@ class NoteController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
+            'color_class' => 'nullable|string',
+            'is_public' => 'nullable|boolean',
         ]);
 
         Note::create([
             'user_id' => auth()->id(),
             'title' => $validated['title'],
             'content' => $validated['content'],
+            'color_class' => $request->input('color_class', 'bg-default'),
+            'is_public' => $request->has('is_public'),
         ]);
 
         return redirect()->route('notes.index')->with('success', '¡Nota creada con éxito!');
@@ -80,9 +98,16 @@ class NoteController extends Controller
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
+            'color_class' => 'nullable|string',
+            'is_public' => 'nullable|boolean',
         ]);
 
-        $note->update($validated);
+        $note->update([
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'color_class' => $request->input('color_class', 'bg-default'),
+            'is_public' => $request->has('is_public'),
+        ]);
 
         return redirect()->route('notes.index')->with('success', '¡Nota actualizada con éxito!');
     }
@@ -94,7 +119,7 @@ class NoteController extends Controller
     {
         $note = Note::findOrFail($id);
 
-        if ($note->user_id !== auth()->id()) {
+        if ($note->user_id !== auth()->id() && auth()->user()->role !== 'admin') {
             abort(403);
         }
 

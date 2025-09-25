@@ -1,11 +1,6 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Nota</title>
-</head>
-<body>
+@extends('layouts.app')
+
+@section('content')
     <div class="container">
         <div class="button-container">
             <a href="/" class="btn btn-secondary">
@@ -28,30 +23,69 @@
                 <label for="content">Contenido:</label>
                 <textarea id="content" name="content" rows="10" required>{{ $note->content }}</textarea>
             </div>
-
+            
             <div class="form-group">
                 <label for="color_class">Color:</label>
                 <select id="color_class" name="color_class">
                     <option value="bg-default" {{ ($note->color_class ?? '') == 'bg-default' ? 'selected' : '' }}>Predeterminado</option>
-                    <option value="bg-lightyellow" {{ ($note->color_class ?? '') == 'bg-lightyellow' ? 'selected' : '' }}>Amarillo</option>
-                    <option value="bg-lightgreen" {{ ($note->color_class ?? '') == 'bg-lightgreen' ? 'selected' : '' }}>Verde</option>
-                    <option value="bg-lightblue" {{ ($note->color_class ?? '') == 'bg-lightblue' ? 'selected' : '' }}>Azul</option>
-                    <option value="bg-lightpink" {{ ($note->color_class ?? '') == 'bg-lightpink' ? 'selected' : '' }}>Rosa</option>
-                    <option value="bg-lightpurple" {{ ($note->color_class ?? '') == 'bg-lightpurple' ? 'selected' : '' }}>Morado</option>
+                    <option value="bg-red" {{ ($note->color_class ?? '') == 'bg-red' ? 'selected' : '' }}>Rojo</option>
+                    <option value="bg-orange-red" {{ ($note->color_class ?? '') == 'bg-orange-red' ? 'selected' : '' }}>Rojo-Naranja</option>
+                    <option value="bg-orange" {{ ($note->color_class ?? '') == 'bg-orange' ? 'selected' : '' }}>Naranja</option>
+                    <option value="bg-yellow-orange" {{ ($note->color_class ?? '') == 'bg-yellow-orange' ? 'selected' : '' }}>Amarillo-Naranja</option>
+                    <option value="bg-yellow" {{ ($note->color_class ?? '') == 'bg-yellow' ? 'selected' : '' }}>Amarillo</option>
+                    <option value="bg-yellow-green" {{ ($note->color_class ?? '') == 'bg-yellow-green' ? 'selected' : '' }}>Amarillo-Verde</option>
+                    <option value="bg-green" {{ ($note->color_class ?? '') == 'bg-green' ? 'selected' : '' }}>Verde</option>
+                    <option value="bg-blue-green" {{ ($note->color_class ?? '') == 'bg-blue-green' ? 'selected' : '' }}>Verde-Azul</option>
+                    <option value="bg-blue" {{ ($note->color_class ?? '') == 'bg-blue' ? 'selected' : '' }}>Azul</option>
+                    <option value="bg-blue-violet" {{ ($note->color_class ?? '') == 'bg-blue-violet' ? 'selected' : '' }}>Azul-Violeta</option>
+                    <option value="bg-violet" {{ ($note->color_class ?? '') == 'bg-violet' ? 'selected' : '' }}>Violeta</option>
+                    <option value="bg-red-violet" {{ ($note->color_class ?? '') == 'bg-red-violet' ? 'selected' : '' }}>Violeta-Rojo</option>
                 </select>
             </div>
                     
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="is_public" id="is_public" value="1">
+                <input class="form-check-input" type="checkbox" name="is_public" id="is_public" value="1" {{ $note->is_public ? 'checked' : '' }}>
                 <label class="form-check-label" for="is_public">
                     Hacer esta nota pública
                 </label>
             </div>
 
+            <div class="note-preview-container">
+                <div class="note-preview {{ $note->color_class ?? 'bg-default' }}" id="note-preview">
+                    <h3 class="note-title">{{ $note->title }}</h3>
+                    <div class="note-content">{{ $note->content }}</div>
+                </div>
+            </div>
+
             <button type="submit" class="btn btn-primary">
-                Guardar Cambios
+                Actualizar Nota
             </button>
         </form>
     </div>
-</body>
-</html>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const titleInput = document.getElementById('title');
+            const contentTextarea = document.getElementById('content');
+            const colorSelect = document.getElementById('color_class');
+            const notePreview = document.getElementById('note-preview');
+
+            function updatePreview() {
+                const selectedColorClass = colorSelect.value;
+                const newTitle = titleInput.value || 'Título de la nota';
+                const newContent = contentTextarea.value || 'Contenido de la nota';
+
+                notePreview.className = 'note-preview ' + selectedColorClass;
+                notePreview.querySelector('.note-title').textContent = newTitle;
+                notePreview.querySelector('.note-content').textContent = newContent;
+            }
+
+            titleInput.addEventListener('input', updatePreview);
+            contentTextarea.addEventListener('input', updatePreview);
+            colorSelect.addEventListener('change', updatePreview);
+            
+            // Llama a la función al cargar la página para la vista inicial
+            updatePreview();
+        });
+    </script>
+@endsection
