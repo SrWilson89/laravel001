@@ -28,7 +28,11 @@ class NoteController extends Controller
                          ->get();
         }
 
-        return view('notes.index', compact('notes'));
+        // 💡 CORRECCIÓN: Apuntando a 'notes.index' para evitar el error de vista no encontrada
+        return view('notes.index', [
+            'notes' => $notes,
+            'view_title' => '📝 Mis Notas'
+        ]);
     }
 
     /**
@@ -113,7 +117,7 @@ class NoteController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage (ELIMINACIÓN PERMANENTE).
      */
     public function destroy(string $id)
     {
@@ -123,24 +127,23 @@ class NoteController extends Controller
             abort(403);
         }
 
-        $note->delete();
+        // Esto realiza la eliminación permanente si el modelo Note NO usa SoftDeletes.
+        $note->delete(); 
 
-        return redirect()->route('notes.index')->with('success', '¡Nota eliminada con éxito!');
+        return redirect()->route('notes.index')->with('success', '¡Nota eliminada permanentemente!');
     }
-    // ... (código existente de la clase NoteController)
 
     /**
      * Muestra una lista de las notas marcadas como favoritas por el usuario.
      */
     public function favorites()
     {
-        // Obtiene todas las notas que el usuario autenticado ha "likeado"
-        // La relación 'likes' está definida en el modelo Note
-        $notes = auth()->user()->likedNotes; // Usaremos una nueva relación en el modelo User
+        $notes = auth()->user()->likedNotes;
 
+        // 💡 CORRECCIÓN: Apuntando a 'notes.index' para evitar el error de vista no encontrada
         return view('notes.index', [
             'notes' => $notes,
-            'view_title' => '⭐ Notas Favoritas' // Pasa un título para el blade
+            'view_title' => '⭐ Notas Favoritas'
         ]);
     }
-} // Cierre de la clase NoteController
+}

@@ -26,6 +26,10 @@
             <div class="control-buttons">
                 @auth
                     <span style="align-self: center; margin-right: 10px;">Hola, {{ Auth::user()->name }}</span>
+                    
+                    {{-- ✉️ Mensajes --}}
+                    <a href="{{ route('messages.index') }}" class="btn btn-secondary" title="Mensajes">✉️</a>
+
                     {{-- 👤 Perfil --}}
                     <a href="{{ route('profile.edit') }}" class="btn btn-secondary" title="Perfil">👤 Perfil</a>
                     <form action="{{ route('logout') }}" method="POST">
@@ -71,7 +75,8 @@
         </div>
     </div>
     
-    @if($notes->isEmpty())
+    {{-- La variable $notes debe ser pasada por el controlador --}}
+    @if(empty($notes) || $notes->isEmpty())
         <div class="empty-state">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -92,7 +97,7 @@
                     @auth
                     <div class="note-actions">
                         
-                        {{-- MARCADOR FUNCIONAL (CORAZÓN) --}}
+                        {{-- **MARCADOR FUNCIONAL (CORAZÓN / FAVORITO)** --}}
                         @php
                             $isLiked = $note->likes->contains(Auth::id()); 
                             $likeRoute = $isLiked ? route('notes.unlike', $note) : route('notes.like', $note);
@@ -104,7 +109,6 @@
                                 @method('DELETE')
                             @endif
                             <button type="submit" class="btn btn-icon btn-like" title="{{ $isLiked ? 'Quitar Favorito' : 'Marcar Favorito' }}">
-                                {{-- ❤️ Corazón lleno o 🤍 Corazón vacío --}}
                                 {!! $isLiked ? '❤️' : '🤍' !!}
                             </button>
                         </form>
@@ -119,13 +123,13 @@
                             </a>
                         @endif
                         
-                        {{-- El usuario PUEDE ELIMINAR si es el dueño O si es admin --}}
+                        {{-- El usuario PUEDE ELIMINAR si es el dueño O si es admin (MODERACIÓN) --}}
                         @if($note->user_id === Auth::id() || (Auth::user()->role === 'admin'))
-                            {{-- 🗑️ Eliminar --}}
+                            {{-- 🗑️ Eliminar (Permanente) --}}
                             <form action="{{ route('notes.destroy', $note) }}" method="POST" style="margin: 0;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger" title="Eliminar" onclick="return confirm('¿Estás seguro de que quieres eliminar esta nota?');">
+                                <button type="submit" class="btn btn-danger" title="Eliminar" onclick="return confirm('¿Estás seguro de que quieres eliminar esta nota de forma permanente?');">
                                     🗑️
                                 </button>
                             </form>

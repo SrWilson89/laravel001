@@ -2,93 +2,75 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NoteController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
 */
 
-// Rutas de autenticación de Laravel
-Auth::routes();
+// RUTA DE LOGOUT
+// Permite que el formulario de cerrar sesión use la ruta 'logout'
+Route::post('/logout', function (Request $request) {
+    Auth::logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    return redirect('/');
+})->name('logout');
 
-// Rutas protegidas por el middleware 'auth'
-// Solo accesibles para usuarios que han iniciado sesión
+// DEBE SER POST para el envío del formulario
+Route::post('/messages/bulk-action', [MessageController::class, 'bulkAction'])->name('messages.bulk_action');
+
+// Rutas protegidas por el middleware 'auth' (Solo accesibles para usuarios que han iniciado sesión)
 Route::middleware(['auth'])->group(function () {
-    // La ruta de inicio ahora usa el controlador de notas y está protegida
+    // Rutas principales
     Route::get('/', [NoteController::class, 'index'])->name('notes.index');
     Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    // Rutas para el perfil del usuario
+    // Rutas de Perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    
-    // Nueva ruta para actualizar la contraseña
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // 🔑 RUTA AÑADIDA: Para la actualización de contraseña
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Rutas para la gestión de notas
+    // Rutas para la gestión de notas (CRUD)
     Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
     Route::get('/notes/{note}/edit', [NoteController::class, 'edit'])->name('notes.edit');
     Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
     Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
 
-    // Rutas para la funcionalidad de 'likes'
+    // Rutas para la funcionalidad de 'likes' (Favoritos/Corazón)
     Route::post('/notes/{note}/like', [LikeController::class, 'store'])->name('notes.like');
     Route::delete('/notes/{note}/unlike', [LikeController::class, 'destroy'])->name('notes.unlike');
-});
-
-// Archivo: routes/web.php
-// ... (código anterior)
-
-// Rutas protegidas por el middleware 'auth'
-Route::middleware(['auth'])->group(function () {
-    // ... (otras rutas como notes.index, notes.create, etc.)
-
-    // Rutas para la gestión de notas
-    Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
-    // ... (otras rutas para notas)
-    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
-
-    // Rutas para la funcionalidad de 'likes' (Favoritos - ahora con restricción VIP)
-    Route::post('/notes/{note}/like', [LikeController::class, 'store'])->name('notes.like');
-    Route::delete('/notes/{note}/unlike', [LikeController::class, 'destroy'])->name('notes.unlike');
-
-    // Rutas para la funcionalidad de 'bookmarks' (Marcadores - con restricción VIP)
-    Route::post('/notes/{note}/bookmark', [BookmarkController::class, 'store'])->name('notes.bookmark');
-    Route::delete('/notes/{note}/unbookmark', [BookmarkController::class, 'destroy'])->name('notes.unbookmark');
-});
-// ... (código existente)
-
-// Rutas protegidas por el middleware 'auth'
-// Solo accesibles para usuarios que han iniciado sesión
-Route::middleware(['auth'])->group(function () {
-    // La ruta de inicio ahora usa el controlador de notas y está protegida
-    Route::get('/', [NoteController::class, 'index'])->name('notes.index');
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-    // ... (otras rutas existentes como profile.edit)
-
-    // Rutas para la gestión de notas
-    Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
-    Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
-    Route::get('/notes/{note}/edit', [NoteController::class, 'edit'])->name('notes.edit');
-    Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
-    Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
-
-    // Rutas para la funcionalidad de 'likes' (Estrella/Favoritos)
-    Route::post('/notes/{note}/like', [LikeController::class, 'store'])->name('notes.like');
-    Route::delete('/notes/{note}/unlike', [LikeController::class, 'destroy'])->name('notes.unlike');
-    
-    // **NUEVA RUTA:** Para ver solo las notas marcadas como favoritas
     Route::get('/notes/favorites', [NoteController::class, 'favorites'])->name('notes.favorites');
+
+    // Rutas para Mensajería
+    Route::prefix('messages')->name('messages.')->group(function () {
+        // Vistas de navegación
+        Route::get('/', [MessageController::class, 'index'])->name('index');
+        Route::get('/sent', [MessageController::class, 'sent'])->name('sent');
+        Route::get('/trash', [MessageController::class, 'trash'])->name('trash');
+
+        // Acción Masiva (POST /messages/bulk-action)
+        Route::post('/bulk-action', [MessageController::class, 'bulkAction'])->name('bulk_action');
+
+        // Envío de mensajes (Solo VIP/Admin)
+        Route::get('/create', [MessageController::class, 'create'])->name('create');
+        Route::post('/', [MessageController::class, 'store'])->name('store');
+        
+        // Acciones Individuales
+        Route::patch('/{message}/read', [MessageController::class, 'markAsRead'])->name('read');
+        // El método destroy usa Soft Delete (DELETE /messages/{message})
+        Route::delete('/{message}', [MessageController::class, 'destroy'])->name('destroy'); 
+        // Restaurar de papelera (POST /messages/{id}/restore)
+        Route::post('/{id}/restore', [MessageController::class, 'restore'])->name('restore');
+    });
 });

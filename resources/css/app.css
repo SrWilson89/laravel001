@@ -55,60 +55,170 @@ h1 {
 
 .control-group {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 1rem;
 }
 
 .control-group label {
-    font-size: 0.9rem;
-    color: #888;
-    margin-bottom: 5px;
+    font-weight: bold;
+    color: #343a40;
 }
 
-.control-buttons {
+.control-buttons .btn {
+    border-radius: 50px;
+    padding: 0.5rem 1.25rem;
+}
+
+/* Estilos de la barra de búsqueda */
+.search-box {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 3rem 0.75rem 1.25rem;
+    border: 1px solid #ced4da;
+    border-radius: 50px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.search-icon {
+    position: absolute;
+    right: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+/* Estilos de las estadísticas */
+.stats {
     display: flex;
-    gap: 10px;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    color: #6c757d;
+}
+
+.stat {
+    display: flex;
     align-items: center;
+    gap: 5px;
 }
 
-/* Estilos de las notas */
+/* Estilos para el estado vacío (no hay notas) */
+.empty-state {
+    text-align: center;
+    padding: 4rem 0;
+}
+
+.empty-state svg {
+    width: 120px;
+    height: 120px;
+    color: #ced4da;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    color: #495057;
+}
+
+.empty-state p {
+    color: #6c757d;
+}
+
+/* Estilos para las notas */
+.notes-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.grid-1 { grid-template-columns: repeat(1, 1fr); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+.grid-5 { grid-template-columns: repeat(5, 1fr); }
+
 .note {
-    padding: 20px;
+    background-color: #ffffff;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 150px;
-    /* Asegurar que las notas tienen un alto mínimo */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.note:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .note-title {
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     font-weight: bold;
-    margin-top: 0;
+    color: #343a40;
     margin-bottom: 0.5rem;
-    color: #333;
 }
 
 .note-content {
+    color: #6c757d;
     font-size: 0.95rem;
     margin-bottom: 1rem;
-    flex-grow: 1;
-    overflow: hidden;
-    /* Para manejar el contenido largo */
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    /* Limitar a 5 líneas */
-    -webkit-box-orient: vertical;
 }
 
 .note-actions {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
-    /* Separación de la nota */
 }
+
+/* Estilos de los colores de las notas */
+.bg-default { background-color: #ffffff; } /* Blanco */
+.bg-red { background-color: #ff4d4d; } /* Rojo */
+.bg-orange-red { background-color: #ff7d4d; } /* Rojo-Naranja */
+.bg-orange { background-color: #ffad4d; } /* Naranja */
+.bg-yellow-orange { background-color: #ffcc4d; } /* Amarillo-Naranja */
+.bg-yellow { background-color: #ffff4d; } /* Amarillo */
+.bg-yellow-green { background-color: #d1ff4d; } /* Amarillo-Verde */
+.bg-green { background-color: #4dff4d; } /* Verde */
+.bg-blue-green { background-color: #4dffc8; } /* Verde-Azul */
+.bg-blue { background-color: #4d8aff; } /* Azul */
+.bg-blue-violet { background-color: #7b4dff; } /* Azul-Violeta */
+.bg-violet { background-color: #c44dff; } /* Violeta */
+.bg-red-violet { background-color: #ff4dc8; } /* Violeta-Rojo */
+
+/* Estilos para el formulario */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+/* Colores del Círculo Cromático */
+.bg-default { background-color: #ffffff; } /* Blanco */
+.bg-red { background-color: #ff4d4d; } /* Rojo */
+.bg-orange-red { background-color: #ff7d4d; } /* Rojo-Naranja */
+.bg-orange { background-color: #ffad4d; } /* Naranja */
+.bg-yellow-orange { background-color: #ffcc4d; } /* Amarillo-Naranja */
+.bg-yellow { background-color: #ffff4d; } /* Amarillo */
+.bg-yellow-green { background-color: #d1ff4d; } /* Amarillo-Verde */
+.bg-green { background-color: #4dff4d; } /* Verde */
+.bg-blue-green { background-color: #4dffc8; } /* Verde-Azul */
+.bg-blue { background-color: #4d8aff; } /* Azul */
+.bg-blue-violet { background-color: #7b4dff; } /* Azul-Violeta */
+.bg-violet { background-color: #c44dff; } /* Violeta */
+.bg-red-violet { background-color: #ff4dc8; } /* Violeta-Rojo */
 
 /* Estilos para el formulario */
 .form-group {
@@ -123,8 +233,7 @@ label {
 }
 
 input[type="text"],
-textarea,
-select {
+textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -132,12 +241,8 @@ select {
     box-sizing: border-box;
 }
 
-/* *** CLASES CLAVE PARA FONT AWESOME / BOTONES *** */
 .btn {
-    display: inline-flex;
-    /* CLAVE: Alinea el icono y el texto horizontalmente */
-    align-items: center;
-    /* CLAVE: Centra verticalmente el icono y el texto */
+    display: inline-block;
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
@@ -149,12 +254,69 @@ select {
     transition: background-color 0.3s ease;
 }
 
-.btn i {
-    margin-right: 5px;
-    /* CLAVE: Espacio entre el icono y el texto */
+.btn-primary {
+    background-color: #007bff;
 }
 
-/* Estilos de Botones */
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+}
+
+.btn-primary:hover, .btn-secondary:hover, .btn-danger:hover {
+    filter: brightness(90%);
+}
+
+.note-preview-container {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+}
+
+.note-preview {
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 200px;
+    word-wrap: break-word;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease;
+}
+
+.note-preview .note-title {
+    margin-top: 0;
+}
+
+.note-preview .note-content {
+    white-space: pre-wrap;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
 .btn-primary {
     background-color: #007bff;
 }
@@ -179,21 +341,6 @@ select {
     background-color: #c82333;
 }
 
-.btn-icon {
-    /* Estilos específicos para botones que solo contienen un icono (como el corazón) */
-    padding: 8px 10px;
-    background: none;
-    /* Sin color de fondo */
-    color: #888;
-    /* Color del icono por defecto */
-    border: 1px solid #ddd;
-}
-
-.btn-icon:hover {
-    background-color: #f0f0f0;
-}
-
-
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -209,8 +356,7 @@ select {
     color: #333;
     font-weight: normal;
 }
-
-/* Nuevos estilos para las diferentes vistas de cuadrícula (1, 2, 3, 4 columnas) */
+/* Nuevos estilos para las diferentes vistas de cuadrícula */
 .notes-grid {
     display: grid;
     gap: 20px;
@@ -232,64 +378,83 @@ select {
 .notes-grid.grid-4 {
     grid-template-columns: repeat(4, 1fr);
 }
-
-/* Estilos de los colores de las notas (versión extendida) */
-.bg-default {
-    background-color: #ffffff;
+.btn-success {
+    background-color: #28a745; /* Color verde */
 }
 
-.bg-red {
-    background-color: #f8d7da;
+.btn-success:hover {
+    background-color: #218838;
 }
 
-.bg-orange-red {
-    background-color: #f5c2b9;
+.btn-danger {
+    background-color: #dc3545; /* Color rojo */
 }
 
-.bg-orange {
-    background-color: #ffdab9;
+.btn-danger:hover {
+    background-color: #c82333;
+}
+/* resources/css/app.css (Fragmento para la cuadrícula) */
+
+.notes-grid {
+    display: grid;
+    gap: 20px;
 }
 
-.bg-yellow-orange {
-    background-color: #ffe8b9;
+/* 1 Columna (Lista) */
+.grid-1 {
+    grid-template-columns: 1fr;
 }
 
-.bg-yellow {
-    background-color: #fffac2;
+/* 2 Columnas */
+.grid-2 {
+    grid-template-columns: repeat(2, 1fr);
 }
 
-.bg-yellow-green {
-    background-color: #e6f7d4;
+/* 3 Columnas (por defecto en algunos navegadores) */
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
 }
 
-.bg-green {
-    background-color: #d6f6e5;
+/* **NUEVA** 4 Columnas */
+.grid-4 {
+    grid-template-columns: repeat(4, 1fr);
 }
 
-.bg-green-cyan {
-    background-color: #d4f7f4;
+/* --- ESTILO NUEVO --- */
+/* Botón de Eliminar Mensaje/Nota (Naranja con Ícono Negro) */
+.btn-delete-orange {
+    background-color: #ff9900; /* Naranja */
+    border-color: #ff9900;
+    color: #000000; /* Ícono Negro */
+    padding: 0.5rem 1rem;
 }
 
-.bg-cyan {
-    background-color: #d9edf7;
+.btn-delete-orange:hover {
+    background-color: #cc7a00; /* Naranja más oscuro */
+    border-color: #cc7a00;
+    color: #000000;
+}
+.btn-delete-orange.btn-sm {
+     padding: 0.2rem 0.5rem; /* Asegurar el tamaño pequeño para la lista de mensajes */
 }
 
-.bg-cyan-blue {
-    background-color: #d4e6f7;
-}
+    /* Estilos generales de la vista de mensajes */
+    .container {
+        padding-top: 20px;
+    }
 
-.bg-blue {
-    background-color: #cce5ff;
-}
+    /* Contenedor del título y el botón "Volver a Notas" */
+    .button-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 25px;
+    }
 
-.bg-blue-magenta {
-    background-color: #e0ccff;
-}
-
-.bg-magenta {
-    background-color: #f0c3ff;
-}
-
-.bg-magenta-red {
-    background-color: #ffcce5;
-}
+    .button-container h1 {
+        margin: 0;
+        flex-grow: 1;
+        text-align: center;
+        font-size: 1.8rem;
+        color: #343a40;
+    }

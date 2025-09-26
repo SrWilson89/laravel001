@@ -3,9 +3,9 @@
 @section('content')
     <div class="container">
         <div class="button-container">
-            {{-- Icono Volver --}}
-            <a href="/" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Volver
+            {{-- CORRECCIÓN APLICADA AQUÍ --}}
+            <a href="{{ route('notes.index') }}" class="btn btn-secondary">
+                Volver
             </a>
             <h1>Crear nueva nota</h1>
             <span></span>
@@ -35,13 +35,11 @@
                     <option value="bg-yellow">Amarillo</option>
                     <option value="bg-yellow-green">Amarillo-Verde</option>
                     <option value="bg-green">Verde</option>
-                    <option value="bg-green-cyan">Verde-Cian</option>
-                    <option value="bg-cyan">Cian</option>
-                    <option value="bg-cyan-blue">Cian-Azul</option>
+                    <option value="bg-blue-green">Verde-Azul</option>
                     <option value="bg-blue">Azul</option>
-                    <option value="bg-blue-magenta">Azul-Magenta</option>
-                    <option value="bg-magenta">Magenta</option>
-                    <option value="bg-magenta-red">Magenta-Rojo</option>
+                    <option value="bg-blue-violet">Azul-Violeta</option>
+                    <option value="bg-violet">Violeta</option>
+                    <option value="bg-red-violet">Violeta-Rojo</option>
                 </select>
             </div>
             <div class="form-check">
@@ -50,18 +48,16 @@
                     Hacer esta nota pública
                 </label>
             </div>
-            
+
             <div class="note-preview-container">
-                <h3>Vista Previa</h3>
-                <div id="note-preview" class="note-preview bg-default">
+                <div class="note-preview" id="note-preview">
                     <h3 class="note-title">Título de la nota</h3>
                     <div class="note-content">Contenido de la nota</div>
                 </div>
             </div>
 
-            {{-- Icono Crear Nota --}}
             <button type="submit" class="btn btn-primary">
-                <i class="fas fa-save"></i> Crear Nota
+                Crear Nota
             </button>
         </form>
     </div>
