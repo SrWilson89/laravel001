@@ -2,29 +2,38 @@
 
 namespace App\Http\Controllers;
 
-// app/Http/Controllers/LikeController.php
-
 use App\Models\Note;
 use Illuminate\Support\Facades\Auth;
 
 class LikeController extends Controller
 {
+    /**
+     * Almacena/archiva un favorito (solo para VIP o Admin).
+     */
     public function store(Note $note)
     {
-        // El usuario debe ser VIP para dar like
-        if (Auth::user()->role !== 'vip') {
-            return back()->with('error', 'Solo los usuarios VIP pueden dar like.');
+        $user = Auth::user();
+
+        // 🚨 RESTRICCIÓN VIP: Solo VIP o Admin pueden archivar favoritos
+        if ($user->role !== 'vip' && $user->role !== 'admin') {
+            return back()->with('error', 'Solo los usuarios VIP o Admin pueden usar la función de Favoritos.');
         }
 
-        Auth::user()->likedNotes()->syncWithoutDetaching($note->id);
+        $note->likes()->attach($user->id);
 
-        return back()->with('success', 'Me gusta añadido.');
+        return back()->with('success', '¡Nota añadida a Favoritos!');
     }
 
+    /**
+     * Elimina un favorito.
+     */
     public function destroy(Note $note)
     {
-        Auth::user()->likedNotes()->detach($note->id);
+        $user = Auth::user();
 
-        return back()->with('success', 'Me gusta eliminado.');
+        // No necesitamos la restricción VIP para DESHACER la acción.
+        $note->likes()->detach($user->id);
+
+        return back()->with('success', '¡Nota eliminada de Favoritos!');
     }
 }

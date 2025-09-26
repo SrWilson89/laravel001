@@ -55,170 +55,60 @@ h1 {
 
 .control-group {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
     margin-bottom: 1rem;
 }
 
 .control-group label {
-    font-weight: bold;
-    color: #343a40;
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 5px;
 }
 
-.control-buttons .btn {
-    border-radius: 50px;
-    padding: 0.5rem 1.25rem;
-}
-
-/* Estilos de la barra de búsqueda */
-.search-box {
-    position: relative;
-    width: 100%;
-    margin-bottom: 1.5rem;
-}
-
-.search-input {
-    width: 100%;
-    padding: 0.75rem 3rem 0.75rem 1.25rem;
-    border: 1px solid #ced4da;
-    border-radius: 50px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.search-icon {
-    position: absolute;
-    right: 1.25rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
-}
-
-/* Estilos de las estadísticas */
-.stats {
+.control-buttons {
     display: flex;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    color: #6c757d;
-}
-
-.stat {
-    display: flex;
+    gap: 10px;
     align-items: center;
-    gap: 5px;
 }
 
-/* Estilos para el estado vacío (no hay notas) */
-.empty-state {
-    text-align: center;
-    padding: 4rem 0;
-}
-
-.empty-state svg {
-    width: 120px;
-    height: 120px;
-    color: #ced4da;
-    margin-bottom: 1rem;
-}
-
-.empty-state h3 {
-    color: #495057;
-}
-
-.empty-state p {
-    color: #6c757d;
-}
-
-/* Estilos para las notas */
-.notes-grid {
-    display: grid;
-    gap: 20px;
-}
-
-.grid-1 { grid-template-columns: repeat(1, 1fr); }
-.grid-2 { grid-template-columns: repeat(2, 1fr); }
-.grid-3 { grid-template-columns: repeat(3, 1fr); }
-.grid-4 { grid-template-columns: repeat(4, 1fr); }
-.grid-5 { grid-template-columns: repeat(5, 1fr); }
-
+/* Estilos de las notas */
 .note {
-    background-color: #ffffff;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 1.5rem;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.note:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 150px;
+    /* Asegurar que las notas tienen un alto mínimo */
 }
 
 .note-title {
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: bold;
-    color: #343a40;
+    margin-top: 0;
     margin-bottom: 0.5rem;
+    color: #333;
 }
 
 .note-content {
-    color: #6c757d;
     font-size: 0.95rem;
     margin-bottom: 1rem;
+    flex-grow: 1;
+    overflow: hidden;
+    /* Para manejar el contenido largo */
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    /* Limitar a 5 líneas */
+    -webkit-box-orient: vertical;
 }
 
 .note-actions {
     display: flex;
     gap: 10px;
+    margin-top: 10px;
+    /* Separación de la nota */
 }
-
-/* Estilos de los colores de las notas */
-.bg-default { background-color: #ffffff; } /* Blanco */
-.bg-red { background-color: #ff4d4d; } /* Rojo */
-.bg-orange-red { background-color: #ff7d4d; } /* Rojo-Naranja */
-.bg-orange { background-color: #ffad4d; } /* Naranja */
-.bg-yellow-orange { background-color: #ffcc4d; } /* Amarillo-Naranja */
-.bg-yellow { background-color: #ffff4d; } /* Amarillo */
-.bg-yellow-green { background-color: #d1ff4d; } /* Amarillo-Verde */
-.bg-green { background-color: #4dff4d; } /* Verde */
-.bg-blue-green { background-color: #4dffc8; } /* Verde-Azul */
-.bg-blue { background-color: #4d8aff; } /* Azul */
-.bg-blue-violet { background-color: #7b4dff; } /* Azul-Violeta */
-.bg-violet { background-color: #c44dff; } /* Violeta */
-.bg-red-violet { background-color: #ff4dc8; } /* Violeta-Rojo */
-
-/* Estilos para el formulario */
-.form-group {
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-/* Colores del Círculo Cromático */
-.bg-default { background-color: #ffffff; } /* Blanco */
-.bg-red { background-color: #ff4d4d; } /* Rojo */
-.bg-orange-red { background-color: #ff7d4d; } /* Rojo-Naranja */
-.bg-orange { background-color: #ffad4d; } /* Naranja */
-.bg-yellow-orange { background-color: #ffcc4d; } /* Amarillo-Naranja */
-.bg-yellow { background-color: #ffff4d; } /* Amarillo */
-.bg-yellow-green { background-color: #d1ff4d; } /* Amarillo-Verde */
-.bg-green { background-color: #4dff4d; } /* Verde */
-.bg-blue-green { background-color: #4dffc8; } /* Verde-Azul */
-.bg-blue { background-color: #4d8aff; } /* Azul */
-.bg-blue-violet { background-color: #7b4dff; } /* Azul-Violeta */
-.bg-violet { background-color: #c44dff; } /* Violeta */
-.bg-red-violet { background-color: #ff4dc8; } /* Violeta-Rojo */
 
 /* Estilos para el formulario */
 .form-group {
@@ -233,7 +123,8 @@ label {
 }
 
 input[type="text"],
-textarea {
+textarea,
+select {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -241,8 +132,12 @@ textarea {
     box-sizing: border-box;
 }
 
+/* *** CLASES CLAVE PARA FONT AWESOME / BOTONES *** */
 .btn {
-    display: inline-block;
+    display: inline-flex;
+    /* CLAVE: Alinea el icono y el texto horizontalmente */
+    align-items: center;
+    /* CLAVE: Centra verticalmente el icono y el texto */
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
@@ -254,69 +149,12 @@ textarea {
     transition: background-color 0.3s ease;
 }
 
-.btn-primary {
-    background-color: #007bff;
+.btn i {
+    margin-right: 5px;
+    /* CLAVE: Espacio entre el icono y el texto */
 }
 
-.btn-secondary {
-    background-color: #6c757d;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-}
-
-.btn-primary:hover, .btn-secondary:hover, .btn-danger:hover {
-    filter: brightness(90%);
-}
-
-.note-preview-container {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f8f9fa;
-}
-
-.note-preview {
-    padding: 20px;
-    border-radius: 8px;
-    min-height: 200px;
-    word-wrap: break-word;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease;
-}
-
-.note-preview .note-title {
-    margin-top: 0;
-}
-
-.note-preview .note-content {
-    white-space: pre-wrap;
-}
-
-input[type="text"],
-textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    box-sizing: border-box;
-}
-
-.btn {
-    display: inline-block;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s ease;
-}
-
+/* Estilos de Botones */
 .btn-primary {
     background-color: #007bff;
 }
@@ -341,6 +179,21 @@ textarea {
     background-color: #c82333;
 }
 
+.btn-icon {
+    /* Estilos específicos para botones que solo contienen un icono (como el corazón) */
+    padding: 8px 10px;
+    background: none;
+    /* Sin color de fondo */
+    color: #888;
+    /* Color del icono por defecto */
+    border: 1px solid #ddd;
+}
+
+.btn-icon:hover {
+    background-color: #f0f0f0;
+}
+
+
 .button-container {
     display: flex;
     justify-content: space-between;
@@ -356,7 +209,8 @@ textarea {
     color: #333;
     font-weight: normal;
 }
-/* Nuevos estilos para las diferentes vistas de cuadrícula */
+
+/* Nuevos estilos para las diferentes vistas de cuadrícula (1, 2, 3, 4 columnas) */
 .notes-grid {
     display: grid;
     gap: 20px;
@@ -378,18 +232,64 @@ textarea {
 .notes-grid.grid-4 {
     grid-template-columns: repeat(4, 1fr);
 }
-.btn-success {
-    background-color: #28a745; /* Color verde */
+
+/* Estilos de los colores de las notas (versión extendida) */
+.bg-default {
+    background-color: #ffffff;
 }
 
-.btn-success:hover {
-    background-color: #218838;
+.bg-red {
+    background-color: #f8d7da;
 }
 
-.btn-danger {
-    background-color: #dc3545; /* Color rojo */
+.bg-orange-red {
+    background-color: #f5c2b9;
 }
 
-.btn-danger:hover {
-    background-color: #c82333;
+.bg-orange {
+    background-color: #ffdab9;
+}
+
+.bg-yellow-orange {
+    background-color: #ffe8b9;
+}
+
+.bg-yellow {
+    background-color: #fffac2;
+}
+
+.bg-yellow-green {
+    background-color: #e6f7d4;
+}
+
+.bg-green {
+    background-color: #d6f6e5;
+}
+
+.bg-green-cyan {
+    background-color: #d4f7f4;
+}
+
+.bg-cyan {
+    background-color: #d9edf7;
+}
+
+.bg-cyan-blue {
+    background-color: #d4e6f7;
+}
+
+.bg-blue {
+    background-color: #cce5ff;
+}
+
+.bg-blue-magenta {
+    background-color: #e0ccff;
+}
+
+.bg-magenta {
+    background-color: #f0c3ff;
+}
+
+.bg-magenta-red {
+    background-color: #ffcce5;
 }

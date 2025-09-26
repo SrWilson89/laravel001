@@ -127,4 +127,20 @@ class NoteController extends Controller
 
         return redirect()->route('notes.index')->with('success', '¡Nota eliminada con éxito!');
     }
-}
+    // ... (código existente de la clase NoteController)
+
+    /**
+     * Muestra una lista de las notas marcadas como favoritas por el usuario.
+     */
+    public function favorites()
+    {
+        // Obtiene todas las notas que el usuario autenticado ha "likeado"
+        // La relación 'likes' está definida en el modelo Note
+        $notes = auth()->user()->likedNotes; // Usaremos una nueva relación en el modelo User
+
+        return view('notes.index', [
+            'notes' => $notes,
+            'view_title' => '⭐ Notas Favoritas' // Pasa un título para el blade
+        ]);
+    }
+} // Cierre de la clase NoteController

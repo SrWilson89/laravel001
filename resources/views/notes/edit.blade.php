@@ -3,8 +3,9 @@
 @section('content')
     <div class="container">
         <div class="button-container">
+            {{-- Icono Volver --}}
             <a href="/" class="btn btn-secondary">
-                Volver
+                <i class="fas fa-arrow-left"></i> Volver
             </a>
             <h1>Editar nota</h1>
             <span></span>
@@ -35,11 +36,13 @@
                     <option value="bg-yellow" {{ ($note->color_class ?? '') == 'bg-yellow' ? 'selected' : '' }}>Amarillo</option>
                     <option value="bg-yellow-green" {{ ($note->color_class ?? '') == 'bg-yellow-green' ? 'selected' : '' }}>Amarillo-Verde</option>
                     <option value="bg-green" {{ ($note->color_class ?? '') == 'bg-green' ? 'selected' : '' }}>Verde</option>
-                    <option value="bg-blue-green" {{ ($note->color_class ?? '') == 'bg-blue-green' ? 'selected' : '' }}>Verde-Azul</option>
+                    <option value="bg-green-cyan" {{ ($note->color_class ?? '') == 'bg-green-cyan' ? 'selected' : '' }}>Verde-Cian</option>
+                    <option value="bg-cyan" {{ ($note->color_class ?? '') == 'bg-cyan' ? 'selected' : '' }}>Cian</option>
+                    <option value="bg-cyan-blue" {{ ($note->color_class ?? '') == 'bg-cyan-blue' ? 'selected' : '' }}>Cian-Azul</option>
                     <option value="bg-blue" {{ ($note->color_class ?? '') == 'bg-blue' ? 'selected' : '' }}>Azul</option>
-                    <option value="bg-blue-violet" {{ ($note->color_class ?? '') == 'bg-blue-violet' ? 'selected' : '' }}>Azul-Violeta</option>
-                    <option value="bg-violet" {{ ($note->color_class ?? '') == 'bg-violet' ? 'selected' : '' }}>Violeta</option>
-                    <option value="bg-red-violet" {{ ($note->color_class ?? '') == 'bg-red-violet' ? 'selected' : '' }}>Violeta-Rojo</option>
+                    <option value="bg-blue-magenta" {{ ($note->color_class ?? '') == 'bg-blue-magenta' ? 'selected' : '' }}>Azul-Magenta</option>
+                    <option value="bg-magenta" {{ ($note->color_class ?? '') == 'bg-magenta' ? 'selected' : '' }}>Magenta</option>
+                    <option value="bg-magenta-red" {{ ($note->color_class ?? '') == 'bg-magenta-red' ? 'selected' : '' }}>Magenta-Rojo</option>
                 </select>
             </div>
                     
@@ -51,14 +54,16 @@
             </div>
 
             <div class="note-preview-container">
-                <div class="note-preview {{ $note->color_class ?? 'bg-default' }}" id="note-preview">
+                <h3>Vista Previa</h3>
+                <div id="note-preview" class="note-preview {{ $note->color_class ?? 'bg-default' }}">
                     <h3 class="note-title">{{ $note->title }}</h3>
                     <div class="note-content">{{ $note->content }}</div>
                 </div>
             </div>
 
+            {{-- Icono Guardar Cambios --}}
             <button type="submit" class="btn btn-primary">
-                Actualizar Nota
+                <i class="fas fa-sync-alt"></i> Actualizar Nota
             </button>
         </form>
     </div>

@@ -8,6 +8,10 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    {{-- Deja SOLO ESTA LÍNEA (la única del CDN de Font Awesome) --}}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMD/OBL2xRcVJ/QfF5/4E0eH4l2D3UeB1x0P40lY6vK3tC2jXp9U/dK1M/9Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    {{-- Asegúrate que la directiva @vite esté presente --}}
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -15,7 +19,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             </nav>
 
-        <main class="container py-4">
+        <main class="py-4">
             @yield('content')
         </main>
     </div>
