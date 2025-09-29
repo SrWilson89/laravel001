@@ -13,10 +13,17 @@ use App\Http\Controllers\ProfileController;
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
+|
+| En este archivo se han fusionado tus rutas originales con las de Laravel Breeze.
+| Se ha corregido la ruta /dashboard para mostrar tus notas.
+|
 */
 
+// RUTAS DE AUTENTICACIÓN DE BREEZE
+// Esto incluye /login, /register, etc., y define el nombre 'login'.
+require __DIR__.'/auth.php';
+
 // RUTA DE LOGOUT
-// Permite que el formulario de cerrar sesión use la ruta 'logout'
 Route::post('/logout', function (Request $request) {
     Auth::logout();
     $request->session()->invalidate();
@@ -24,19 +31,26 @@ Route::post('/logout', function (Request $request) {
     return redirect('/');
 })->name('logout');
 
-// DEBE SER POST para el envío del formulario
+// RUTA /home (Si sigue existiendo)
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+// DEBE SER POST para el envío del formulario (Ruta bulk action fuera de prefix)
 Route::post('/messages/bulk-action', [MessageController::class, 'bulkAction'])->name('messages.bulk_action');
 
 // Rutas protegidas por el middleware 'auth' (Solo accesibles para usuarios que han iniciado sesión)
 Route::middleware(['auth'])->group(function () {
-    // Rutas principales
+    
+    // 🔑 CORRECCIÓN: RUTA PRINCIPAL /
+    // Ahora muestra la lista de notas de tu controlador
     Route::get('/', [NoteController::class, 'index'])->name('notes.index');
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-    // Rutas de Perfil
+    // 🔑 CORRECCIÓN: RUTA /DASHBOARD
+    // Ahora también muestra la lista de notas de tu controlador
+    Route::get('/dashboard', [NoteController::class, 'index'])->middleware(['verified'])->name('dashboard');
+
+    // Rutas de Perfil (CRUD, incluyendo la actualización de contraseña)
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // 🔑 RUTA AÑADIDA: Para la actualización de contraseña
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
@@ -59,18 +73,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/sent', [MessageController::class, 'sent'])->name('sent');
         Route::get('/trash', [MessageController::class, 'trash'])->name('trash');
 
-        // Acción Masiva (POST /messages/bulk-action)
-        Route::post('/bulk-action', [MessageController::class, 'bulkAction'])->name('bulk_action');
-
         // Envío de mensajes (Solo VIP/Admin)
         Route::get('/create', [MessageController::class, 'create'])->name('create');
         Route::post('/', [MessageController::class, 'store'])->name('store');
         
         // Acciones Individuales
         Route::patch('/{message}/read', [MessageController::class, 'markAsRead'])->name('read');
-        // El método destroy usa Soft Delete (DELETE /messages/{message})
         Route::delete('/{message}', [MessageController::class, 'destroy'])->name('destroy'); 
-        // Restaurar de papelera (POST /messages/{id}/restore)
         Route::post('/{id}/restore', [MessageController::class, 'restore'])->name('restore');
     });
 });

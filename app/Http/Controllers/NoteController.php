@@ -28,7 +28,7 @@ class NoteController extends Controller
                          ->get();
         }
 
-        // 💡 CORRECCIÓN: Apuntando a 'notes.index' para evitar el error de vista no encontrada
+        // Esta vista 'notes.index' es la que debe contener el HTML para listar las notas
         return view('notes.index', [
             'notes' => $notes,
             'view_title' => '📝 Mis Notas'
@@ -140,7 +140,6 @@ class NoteController extends Controller
     {
         $notes = auth()->user()->likedNotes;
 
-        // 💡 CORRECCIÓN: Apuntando a 'notes.index' para evitar el error de vista no encontrada
         return view('notes.index', [
             'notes' => $notes,
             'view_title' => '⭐ Notas Favoritas'
