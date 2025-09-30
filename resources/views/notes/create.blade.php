@@ -29,89 +29,83 @@
                         </ul>
                     </div>
                 @endif
-                
-                <form action="{{ route('notes.store') }}" method="POST">
+
+                <form method="POST" action="{{ route('notes.store') }}">
                     @csrf
                     
-                    {{-- Título --}}
+                    {{-- Campo Título --}}
                     <div class="mb-4">
-                        <label for="title" class="block text-sm font-medium text-gray-700">Título:</label>
-                        <input type="text" id="title" name="title" value="{{ old('title') }}" required
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <label for="title" class="block font-medium text-sm text-gray-700">Título</label>
+                        <input id="title" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" type="text" name="title" value="{{ old('title') }}" required autofocus />
                     </div>
 
-                    {{-- Contenido --}}
+                    {{-- Campo Contenido --}}
                     <div class="mb-4">
-                        <label for="content" class="block text-sm font-medium text-gray-700">Contenido:</label>
-                        <textarea id="content" name="content" rows="10" required
-                                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('content') }}</textarea>
+                        <label for="content" class="block font-medium text-sm text-gray-700">Contenido</label>
+                        <textarea id="content" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" name="content" rows="6" required>{{ old('content') }}</textarea>
                     </div>
-                    
+
                     {{-- Selector de Color --}}
                     <div class="mb-6">
-                        <label for="color_class" class="block text-sm font-medium text-gray-700">Color:</label>
-                        <select id="color_class" name="color_class"
-                                class="mt-1 block w-full md:w-1/2 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                            {{-- Se usa old() para mantener el valor seleccionado tras un error de validación --}}
-                            <option value="bg-default" {{ old('color_class') == 'bg-default' ? 'selected' : '' }}>Predeterminado</option>
-                            <option value="bg-red" {{ old('color_class') == 'bg-red' ? 'selected' : '' }}>Rojo</option>
-                            <option value="bg-orange-red" {{ old('color_class') == 'bg-orange-red' ? 'selected' : '' }}>Rojo-Naranja</option>
-                            <option value="bg-orange" {{ old('color_class') == 'bg-orange' ? 'selected' : '' }}>Naranja</option>
-                            <option value="bg-yellow-orange" {{ old('color_class') == 'bg-yellow-orange' ? 'selected' : '' }}>Amarillo-Naranja</option>
-                            <option value="bg-yellow" {{ old('color_class') == 'bg-yellow' ? 'selected' : '' }}>Amarillo</option>
-                            <option value="bg-yellow-green" {{ old('color_class') == 'bg-yellow-green' ? 'selected' : '' }}>Amarillo-Verde</option>
-                            <option value="bg-green" {{ old('color_class') == 'bg-green' ? 'selected' : '' }}>Verde</option>
-                            <option value="bg-blue-green" {{ old('color_class') == 'bg-blue-green' ? 'selected' : '' }}>Verde-Azul</option>
-                            <option value="bg-blue" {{ old('color_class') == 'bg-blue' ? 'selected' : '' }}>Azul</option>
-                            <option value="bg-blue-violet" {{ old('color_class') == 'bg-blue-violet' ? 'selected' : '' }}>Azul-Violeta</option>
-                            <option value="bg-violet" {{ old('color_class') == 'bg-violet' ? 'selected' : '' }}>Violeta</option>
-                            <option value="bg-red-violet" {{ old('color_class') == 'bg-red-violet' ? 'selected' : '' }}>Violeta-Rojo</option>
+                        <label for="color_class" class="block font-medium text-sm text-gray-700">Color de la Nota</label>
+                        <select id="color_class" name="color_class" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full">
+                            <option value="bg-white" class="bg-white">Blanco (Por Defecto)</option>
+                            <option value="bg-red-100" class="bg-red-100">Rojo Claro</option>
+                            <option value="bg-orange-100" class="bg-orange-100">Naranja Rojizo</option>
+                            <option value="bg-amber-100" class="bg-amber-100">Naranja</option>
+                            <option value="bg-yellow-100" class="bg-yellow-100">Amarillo Naranja</option>
+                            <option value="bg-lime-100" class="bg-lime-100">Amarillo</option>
+                            <option value="bg-green-100" class="bg-green-100">Verde Amarillo</option>
+                            <option value="bg-emerald-100" class="bg-emerald-100">Verde</option>
+                            <option value="bg-cyan-100" class="bg-cyan-100">Azul Verdoso</option>
+                            <option value="bg-blue-100" class="bg-blue-100">Azul</option>
+                            <option value="bg-indigo-100" class="bg-indigo-100">Azul Violeta</option>
+                            <option value="bg-purple-100" class="bg-purple-100">Violeta</option>
+                            <option value="bg-pink-100" class="bg-pink-100">Rojo Violeta</option>
                         </select>
                     </div>
-
-                    {{-- Checkbox Público --}}
-                    <div class="mb-6">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" name="is_public" id="is_public" value="1" 
-                                   class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                   {{ old('is_public') ? 'checked' : '' }}>
-                            <span class="ml-2 text-sm text-gray-600">Hacer esta nota pública</span>
+                    
+                    {{-- Checkbox Público/Privado --}}
+                    <div class="mb-6 flex items-center">
+                        <input id="is_public" name="is_public" type="checkbox" value="1" {{ old('is_public') ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                        <label for="is_public" class="ml-2 block text-sm font-medium text-gray-700">
+                            Hacer pública (Visible para otros usuarios)
                         </label>
                     </div>
-
-                    {{-- Previsualización de la Nota (Estilizado con Tailwind) --}}
-                    <div class="note-preview-container mb-6 p-4 border border-gray-200 rounded-lg">
-                        <h4 class="text-sm font-semibold mb-2 text-gray-600">Previsualización:</h4>
-                        <div class="note-preview bg-default p-5 rounded-lg shadow-md border-2 border-gray-100" id="note-preview">
-                            <h3 class="note-title text-xl font-bold mb-2">Título de la nota</h3>
-                            <div class="note-content text-gray-700 text-sm">Contenido de la nota</div>
-                        </div>
-                    </div>
-
-                    {{-- Botón de Crear --}}
-                    <div class="flex items-center justify-end">
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
-                            Crear Nota
+                    
+                    {{-- Botón Guardar --}}
+                    <div class="flex justify-end">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                            Guardar Nota
                         </button>
                     </div>
                 </form>
+
+                <hr class="my-8 border-gray-200">
+
+                {{-- Previsualización de la Nota --}}
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Vista Previa</h3>
+                <div id="note-preview" class="p-5 rounded-lg shadow-md border border-gray-200" style="min-height: 150px;">
+                    <h4 class="note-title text-xl font-bold mb-2">Título de la nota</h4>
+                    <p class="note-content text-gray-700 text-sm">Contenido de la nota</p>
+                </div>
 
             </div>
         </div>
     </div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const titleInput = document.getElementById('title');
             const contentTextarea = document.getElementById('content');
             const colorSelect = document.getElementById('color_class');
             const notePreview = document.getElementById('note-preview');
-            
-            // Todas las clases de color posibles para limpiar
+
+            // NUEVAS CLASES DE COLOR DE TAILWIND ESTÁNDAR
             const colorClasses = [
-                'bg-default', 'bg-red', 'bg-orange-red', 'bg-orange', 'bg-yellow-orange', 
-                'bg-yellow', 'bg-yellow-green', 'bg-green', 'bg-blue-green', 'bg-blue', 
-                'bg-blue-violet', 'bg-violet', 'bg-red-violet'
+                'bg-white', 'bg-red-100', 'bg-orange-100', 'bg-amber-100', 'bg-yellow-100', 
+                'bg-lime-100', 'bg-green-100', 'bg-emerald-100', 'bg-cyan-100', 'bg-blue-100', 
+                'bg-indigo-100', 'bg-purple-100', 'bg-pink-100'
             ];
 
             function updatePreview() {

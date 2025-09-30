@@ -29,91 +29,84 @@
                         </ul>
                     </div>
                 @endif
-                
-                <form action="{{ route('notes.update', $note) }}" method="POST">
+
+                <form method="POST" action="{{ route('notes.update', $note) }}">
                     @csrf
                     @method('PUT')
-
-                    {{-- Título --}}
-                    <div class="mb-4">
-                        <label for="title" class="block text-sm font-medium text-gray-700">Título:</label>
-                        <input type="text" id="title" name="title" value="{{ old('title', $note->title) }}" required
-                               class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                    </div>
-
-                    {{-- Contenido --}}
-                    <div class="mb-4">
-                        <label for="content" class="block text-sm font-medium text-gray-700">Contenido:</label>
-                        <textarea id="content" name="content" rows="10" required
-                                  class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">{{ old('content', $note->content) }}</textarea>
-                    </div>
                     
+                    {{-- Campo Título --}}
+                    <div class="mb-4">
+                        <label for="title" class="block font-medium text-sm text-gray-700">Título</label>
+                        <input id="title" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" type="text" name="title" value="{{ old('title', $note->title) }}" required autofocus />
+                    </div>
+
+                    {{-- Campo Contenido --}}
+                    <div class="mb-4">
+                        <label for="content" class="block font-medium text-sm text-gray-700">Contenido</label>
+                        <textarea id="content" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" name="content" rows="6" required>{{ old('content', $note->content) }}</textarea>
+                    </div>
+
                     {{-- Selector de Color --}}
                     <div class="mb-6">
-                        <label for="color_class" class="block text-sm font-medium text-gray-700">Color:</label>
-                        <select id="color_class" name="color_class"
-                                class="mt-1 block w-full md:w-1/2 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                            {{-- Los values se mantuvieron, pero las clases bg- deben ser añadidas a Tailwind si no existen --}}
-                            <option value="bg-default" {{ ($note->color_class ?? '') == 'bg-default' ? 'selected' : '' }}>Predeterminado</option>
-                            <option value="bg-red" {{ ($note->color_class ?? '') == 'bg-red' ? 'selected' : '' }}>Rojo</option>
-                            <option value="bg-orange-red" {{ ($note->color_class ?? '') == 'bg-orange-red' ? 'selected' : '' }}>Rojo-Naranja</option>
-                            <option value="bg-orange" {{ ($note->color_class ?? '') == 'bg-orange' ? 'selected' : '' }}>Naranja</option>
-                            <option value="bg-yellow-orange" {{ ($note->color_class ?? '') == 'bg-yellow-orange' ? 'selected' : '' }}>Amarillo-Naranja</option>
-                            <option value="bg-yellow" {{ ($note->color_class ?? '') == 'bg-yellow' ? 'selected' : '' }}>Amarillo</option>
-                            <option value="bg-yellow-green" {{ ($note->color_class ?? '') == 'bg-yellow-green' ? 'selected' : '' }}>Amarillo-Verde</option>
-                            <option value="bg-green" {{ ($note->color_class ?? '') == 'bg-green' ? 'selected' : '' }}>Verde</option>
-                            <option value="bg-blue-green" {{ ($note->color_class ?? '') == 'bg-blue-green' ? 'selected' : '' }}>Verde-Azul</option>
-                            <option value="bg-blue" {{ ($note->color_class ?? '') == 'bg-blue' ? 'selected' : '' }}>Azul</option>
-                            <option value="bg-blue-violet" {{ ($note->color_class ?? '') == 'bg-blue-violet' ? 'selected' : '' }}>Azul-Violeta</option>
-                            <option value="bg-violet" {{ ($note->color_class ?? '') == 'bg-violet' ? 'selected' : '' }}>Violeta</option>
-                            <option value="bg-red-violet" {{ ($note->color_class ?? '') == 'bg-red-violet' ? 'selected' : '' }}>Violeta-Rojo</option>
+                        <label for="color_class" class="block font-medium text-sm text-gray-700">Color de la Nota</label>
+                        <select id="color_class" name="color_class" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full">
+                            <option value="bg-white" class="bg-white" {{ old('color_class', $note->color_class) == 'bg-white' ? 'selected' : '' }}>Blanco (Por Defecto)</option>
+                            <option value="bg-red-100" class="bg-red-100" {{ old('color_class', $note->color_class) == 'bg-red-100' ? 'selected' : '' }}>Rojo Claro</option>
+                            <option value="bg-orange-100" class="bg-orange-100" {{ old('color_class', $note->color_class) == 'bg-orange-100' ? 'selected' : '' }}>Naranja Rojizo</option>
+                            <option value="bg-amber-100" class="bg-amber-100" {{ old('color_class', $note->color_class) == 'bg-amber-100' ? 'selected' : '' }}>Naranja</option>
+                            <option value="bg-yellow-100" class="bg-yellow-100" {{ old('color_class', $note->color_class) == 'bg-yellow-100' ? 'selected' : '' }}>Amarillo Naranja</option>
+                            <option value="bg-lime-100" class="bg-lime-100" {{ old('color_class', $note->color_class) == 'bg-lime-100' ? 'selected' : '' }}>Amarillo</option>
+                            <option value="bg-green-100" class="bg-green-100" {{ old('color_class', $note->color_class) == 'bg-green-100' ? 'selected' : '' }}>Verde Amarillo</option>
+                            <option value="bg-emerald-100" class="bg-emerald-100" {{ old('color_class', $note->color_class) == 'bg-emerald-100' ? 'selected' : '' }}>Verde</option>
+                            <option value="bg-cyan-100" class="bg-cyan-100" {{ old('color_class', $note->color_class) == 'bg-cyan-100' ? 'selected' : '' }}>Azul Verdoso</option>
+                            <option value="bg-blue-100" class="bg-blue-100" {{ old('color_class', $note->color_class) == 'bg-blue-100' ? 'selected' : '' }}>Azul</option>
+                            <option value="bg-indigo-100" class="bg-indigo-100" {{ old('color_class', $note->color_class) == 'bg-indigo-100' ? 'selected' : '' }}>Azul Violeta</option>
+                            <option value="bg-purple-100" class="bg-purple-100" {{ old('color_class', $note->color_class) == 'bg-purple-100' ? 'selected' : '' }}>Violeta</option>
+                            <option value="bg-pink-100" class="bg-pink-100" {{ old('color_class', $note->color_class) == 'bg-pink-100' ? 'selected' : '' }}>Rojo Violeta</option>
                         </select>
                     </div>
-
-                    {{-- Checkbox Público --}}
-                    <div class="mb-6">
-                        <label class="inline-flex items-center">
-                            <input type="checkbox" name="is_public" id="is_public" value="1" 
-                                   class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                                   {{ $note->is_public ? 'checked' : '' }}>
-                            <span class="ml-2 text-sm text-gray-600">Hacer esta nota pública</span>
+                    
+                    {{-- Checkbox Público/Privado --}}
+                    <div class="mb-6 flex items-center">
+                        <input id="is_public" name="is_public" type="checkbox" value="1" {{ old('is_public', $note->is_public) ? 'checked' : '' }} class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                        <label for="is_public" class="ml-2 block text-sm font-medium text-gray-700">
+                            Hacer pública (Visible para otros usuarios)
                         </label>
                     </div>
-
-                    {{-- Previsualización de la Nota (Estilizado con Tailwind) --}}
-                    <div class="note-preview-container mb-6 p-4 border border-gray-200 rounded-lg">
-                        <h4 class="text-sm font-semibold mb-2 text-gray-600">Previsualización:</h4>
-                        <div class="note-preview p-5 rounded-lg shadow-md border-2 border-gray-100" id="note-preview">
-                            <h3 class="note-title text-xl font-bold mb-2">{{ $note->title }}</h3>
-                            <div class="note-content text-gray-700 text-sm">{{ $note->content }}</div>
-                        </div>
-                    </div>
-
-                    {{-- Botón de Actualizar --}}
-                    <div class="flex items-center justify-end">
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition">
+                    
+                    {{-- Botón Guardar --}}
+                    <div class="flex justify-end">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 focus:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
                             Actualizar Nota
                         </button>
                     </div>
                 </form>
+
+                <hr class="my-8 border-gray-200">
+
+                {{-- Previsualización de la Nota --}}
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Vista Previa</h3>
+                <div id="note-preview" class="p-5 rounded-lg shadow-md border border-gray-200" style="min-height: 150px;">
+                    <h4 class="note-title text-xl font-bold mb-2">{{ $note->title }}</h4>
+                    <p class="note-content text-gray-700 text-sm">{{ $note->content }}</p>
+                </div>
 
             </div>
         </div>
     </div>
     
     <script>
-        // La lógica JS se mantiene, pero actualiza las clases de color en el preview
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', () => {
             const titleInput = document.getElementById('title');
             const contentTextarea = document.getElementById('content');
             const colorSelect = document.getElementById('color_class');
             const notePreview = document.getElementById('note-preview');
 
-            // Todas las clases de color en el select
+            // NUEVAS CLASES DE COLOR DE TAILWIND ESTÁNDAR
             const colorClasses = [
-                'bg-default', 'bg-red', 'bg-orange-red', 'bg-orange', 'bg-yellow-orange', 
-                'bg-yellow', 'bg-yellow-green', 'bg-green', 'bg-blue-green', 'bg-blue', 
-                'bg-blue-violet', 'bg-violet', 'bg-red-violet'
+                'bg-white', 'bg-red-100', 'bg-orange-100', 'bg-amber-100', 'bg-yellow-100', 
+                'bg-lime-100', 'bg-green-100', 'bg-emerald-100', 'bg-cyan-100', 'bg-blue-100', 
+                'bg-indigo-100', 'bg-purple-100', 'bg-pink-100'
             ];
 
             function updatePreview() {

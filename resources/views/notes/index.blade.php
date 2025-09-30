@@ -1,267 +1,186 @@
 <x-app-layout>
-    {{-- 1. Cabecera --}}
+    {{-- 1. Cabecera (Se muestra en la parte superior del layout) --}}
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ $view_title ?? '📝 Mis Notas' }}
         </h2>
     </x-slot>
 
-    {{-- 2. Contenido Principal --}}
+    {{-- 2. Contenido Principal (Utiliza las clases de espaciado y centrado de Breeze) --}}
     <div class="py-6 sm:py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            {{-- Contenedor principal con diseño mejorado --}}
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-2xl"> 
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{-- Contenedor blanco con sombra y padding --}}
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6 lg:p-8"> 
                 
-                {{-- Mensajes de Éxito o Error --}}
+                {{-- Mensajes de Éxito o Error (Clases Tailwind para Alerts) --}}
                 @if(session('success'))
-                    <div class="mx-6 mt-6 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 text-green-800 p-4 rounded-r-lg shadow-sm flex items-start space-x-3" role="alert">
-                        <svg class="w-5 h-5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                        </svg>
-                        <span class="font-medium">{{ session('success') }}</span>
+                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
+                        {{ session('success') }}
                     </div>
                 @endif
                 @if(session('error'))
-                    <div class="mx-6 mt-6 bg-gradient-to-r from-red-50 to-rose-50 border-l-4 border-red-500 text-red-800 p-4 rounded-r-lg shadow-sm flex items-start space-x-3" role="alert">
-                        <svg class="w-5 h-5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-                        </svg>
-                        <span class="font-medium">{{ session('error') }}</span>
+                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+                        {{ session('error') }}
                     </div>
                 @endif
             
-                {{-- Panel de Controles con diseño mejorado --}}
-                <div class="p-6 lg:p-8 space-y-6">
+                {{-- Controles (Autenticación, Acciones, Vista) --}}
+                <div class="space-y-6">
                     
-                    {{-- GRUPO: 🔐 Autenticación --}}
-                    <div class="bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl p-5 border border-gray-100">
-                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-3">
-                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                            </svg>
-                            Autenticación
-                        </label>
-                        <div class="flex flex-wrap items-center gap-3">
+                    {{-- GRUPO: 🔑 Autenticación --}}
+                    <div class="border-b pb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">🔑 Autenticación</label>
+                        <div class="flex flex-wrap items-center space-x-2">
                             @auth
                                 
-                                {{-- 📸 AVATAR EDITABLE --}}
+                                {{-- 📸 AVATAR EDITABLE (NUEVO) 📸 --}}
                                 @php
+                                    // Accedemos directamente a la fachada Storage.
                                     $photoUrl = Auth::user()->profile_photo_path 
                                                 ? \Illuminate\Support\Facades\Storage::url(Auth::user()->profile_photo_path) 
-                                                : 'https://placehold.co/40x40/4f46e5/ffffff?text=' . strtoupper(substr(Auth::user()->name, 0, 1));
+                                                : 'https://placehold.co/40x40/007bff/ffffff?text=U';
                                 @endphp
 
                                 <a href="{{ route('profile.edit') }}" 
-                                    class="group relative block h-11 w-11 rounded-full ring-2 ring-indigo-400 hover:ring-indigo-600 transition-all duration-200 hover:scale-105 shadow-md hover:shadow-lg" 
+                                    class="relative block h-10 w-10 rounded-full ring-2 ring-indigo-500 hover:ring-indigo-700 transition duration-150" 
                                     title="Editar Perfil de {{ Auth::user()->name }}">
                                     
+                                    {{-- Imagen del Avatar --}}
                                     <img src="{{ $photoUrl }}" 
                                         alt="{{ Auth::user()->name }}" 
                                         class="h-full w-full object-cover rounded-full">
 
-                                    <span class="absolute -bottom-1 -right-1 h-5 w-5 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-full flex items-center justify-center text-xs shadow-lg border-2 border-white group-hover:scale-110 transition-transform duration-200">
+                                    {{-- Icono de Edición (Boli) --}}
+                                    <span class="absolute bottom-0 right-0 h-4 w-4 bg-white rounded-full flex items-center justify-center text-xs shadow-md border border-indigo-500 transition duration-150">
                                         ✏️
                                     </span>
                                 </a>
+                                {{-- FIN AVATAR EDITABLE --}}
 
-                                <span class="text-sm font-semibold text-gray-700 px-2">Hola, {{ Auth::user()->name }}</span>
+
+                                <span class="text-sm font-medium text-gray-600 mr-4">Hola, {{ Auth::user()->name }}</span>
                                 
                                 {{-- ✉️ Mensajes --}}
-                                <a href="{{ route('messages.index') }}" 
-                                   class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow font-medium text-sm flex items-center gap-2" 
-                                   title="Mensajes">
-                                    <span>✉️</span>
-                                    <span class="hidden sm:inline">Mensajes</span>
-                                </a>
+                                <a href="{{ route('messages.index') }}" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" title="Mensajes">✉️</a>
                                 
+                                {{-- Aplicamos el nuevo y sofisticado estilo con gradiente --}}
                                 <form action="{{ route('logout') }}" method="POST" class="m-0">
                                     @csrf
+                                    {{-- 🚪 Cerrar Sesión (BOTÓN ROJO GRADIENTE) --}}
                                     <button type="submit" 
-                                        class="px-5 py-2.5 bg-custom-red border border-transparent rounded-lg font-bold text-sm !text-black uppercase tracking-wider transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-2.5 min-w-max"
-                                        title="Cerrar Sesión">
-                                        <span class="text-base">🚪</span>
-                                        <span class="hidden sm:inline">Cerrar Sesión</span>
+                                            class="px-5 py-2.5 bg-gradient-to-r from-red-500 to-red-600 border border-transparent rounded-lg font-bold text-sm text-white uppercase tracking-wider hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-2.5 min-w-max" 
+                                            title="Cerrar Sesión">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                        </svg>
+                                        Cerrar Sesión
                                     </button>
                                 </form>
                             @else
-                                <a href="{{ route('login') }}" 
-                                   class="px-5 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow font-semibold text-sm">
-                                    🗝️ Login
-                                </a>
-                                <a href="{{ route('register') }}" 
-                                   class="px-5 py-2.5 bg-gradient-to-r from-indigo-500 to-indigo-600 border border-transparent rounded-lg text-white hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg font-semibold text-sm">
-                                    📝 Registro
-                                </a>
+                                <a href="{{ route('login') }}" class="text-sm font-semibold text-gray-700 hover:text-gray-900">🗝️ Login</a>
+                                <a href="{{ route('register') }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-900">🔑 Registro</a>
                             @endauth
                         </div>
                     </div>
 
                     {{-- GRUPO: 🚀 Acciones --}}
-                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-5 border border-indigo-100">
-                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-3">
-                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14c.015-.34.208-.646.477-.859a4 4 0 10-4.954 0c.27.213.462.519.476.859h4.002z"/>
-                            </svg>
-                            Acciones
-                        </label>
-                        <div class="flex flex-wrap gap-3">
-                            <a href="{{ route('notes.index') }}" 
-                               class="px-4 py-2 bg-white border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 shadow-sm hover:shadow font-medium text-sm flex items-center gap-2" 
-                               title="Todas las Notas">
-                                <span>🏠</span>
-                                <span>Todas</span>
-                            </a>
-                            <a href="{{ route('notes.favorites') }}" 
-                               class="px-4 py-2 bg-gradient-to-r from-yellow-100 to-amber-100 border border-yellow-200 rounded-lg text-yellow-800 hover:from-yellow-200 hover:to-amber-200 hover:border-yellow-300 transition-all duration-200 shadow-sm hover:shadow font-medium text-sm flex items-center gap-2" 
-                               title="Notas Favoritas">
-                                <span>❤️</span>
-                                <span>Favoritas</span>
-                            </a>
-                            <a href="{{ route('notes.create') }}" 
-                               class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-indigo-600 border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-wider hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 flex items-center gap-2" 
-                               title="Nueva Nota">
-                                <span>➕</span>
-                                <span>Nueva Nota</span>
-                            </a>
+                    <div class="border-b pb-4">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">🚀 Acciones</label>
+                        <div class="flex flex-wrap space-x-2">
+                            <a href="{{ route('notes.index') }}" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" title="Todas las Notas">🏠 Todas</a>
+                            <a href="{{ route('notes.favorites') }}" class="px-4 py-2 bg-yellow-100 border border-yellow-300 rounded-md text-yellow-700 hover:bg-yellow-200 transition" title="Notas Favoritas">❤️ Favoritas</a>
+                            <a href="{{ route('notes.create') }}" class="px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition" title="Nueva Nota">➕ Nueva Nota</a>
                         </div>
                     </div>
 
                     {{-- GRUPO: 📊 Vista --}}
-                    <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl p-5 border border-blue-100">
-                        <label class="flex items-center text-sm font-semibold text-gray-700 mb-3">
-                            <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
-                            </svg>
-                            Vista
-                        </label>
-                        <div class="flex gap-2">
-                            <button class="view-btn px-4 py-2 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 font-semibold shadow-sm hover:shadow" 
-                                    onclick="changeView('grid-1')" 
-                                    title="1 Columna (Lista)">
-                                <svg class="w-5 h-5 mx-auto" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"/>
-                                </svg>
-                            </button>
-                            <button class="view-btn px-4 py-2 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 font-semibold shadow-sm hover:shadow" 
-                                    onclick="changeView('grid-2')" 
-                                    title="2 Columnas">
-                                <div class="flex gap-1">
-                                    <div class="w-2 h-5 bg-current rounded"></div>
-                                    <div class="w-2 h-5 bg-current rounded"></div>
-                                </div>
-                            </button>
-                            <button class="view-btn px-4 py-2 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 font-semibold shadow-sm hover:shadow" 
-                                    onclick="changeView('grid-3')" 
-                                    title="3 Columnas">
-                                <div class="flex gap-1">
-                                    <div class="w-1.5 h-5 bg-current rounded"></div>
-                                    <div class="w-1.5 h-5 bg-current rounded"></div>
-                                    <div class="w-1.5 h-5 bg-current rounded"></div>
-                                </div>
-                            </button>
-                            <button class="view-btn px-4 py-2 bg-white border-2 border-gray-200 rounded-lg text-gray-700 hover:bg-blue-50 hover:border-blue-400 transition-all duration-200 font-semibold shadow-sm hover:shadow" 
-                                    onclick="changeView('grid-4')" 
-                                    title="4 Columnas">
-                                <div class="flex gap-0.5">
-                                    <div class="w-1 h-5 bg-current rounded"></div>
-                                    <div class="w-1 h-5 bg-current rounded"></div>
-                                    <div class="w-1 h-5 bg-current rounded"></div>
-                                    <div class="w-1 h-5 bg-current rounded"></div>
-                                </div>
-                            </button>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">📊 Vista</label>
+                        <div class="flex space-x-2">
+                            <button class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" onclick="changeView('grid-1')" title="1 Columna (Lista)">1</button>
+                            <button class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" onclick="changeView('grid-2')" title="2 Columnas">2</button>
+                            <button class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" onclick="changeView('grid-3')" title="3 Columnas">3</button>
+                            <button class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" onclick="changeView('grid-4')" title="4 Columna">4</button>
                         </div>
                     </div>
                 </div>
                 
-                <div class="px-6 lg:px-8">
-                    <hr class="border-gray-200">
-                </div>
+                <hr class="my-8 border-gray-200">
 
                 {{-- Listado de Notas --}}
-                <div class="p-6 lg:p-8">
-                    @if(empty($notes) || $notes->isEmpty())
-                        <div class="text-center p-12 bg-gradient-to-br from-gray-50 to-slate-50 rounded-2xl border-2 border-dashed border-gray-200">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-20 h-20 mx-auto text-gray-300 mb-4">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                            </svg>
-                            <h3 class="text-xl font-bold text-gray-700 mb-2">{{ $view_title ?? 'No se encontraron notas' }}</h3>
-                            @if(!isset($view_title) || $view_title == '📝 Mis Notas')
-                                <p class="text-gray-500 mb-6">¡Crea tu primera nota para empezar!</p>
-                                <a href="{{ route('notes.create') }}" 
-                                   class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white font-semibold rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
-                                    <span>➕</span>
-                                    <span>Crear Primera Nota</span>
-                                </a>
-                            @endif
-                        </div>
-                    @else
-                        <div id="notes-list" class="notes-grid grid gap-5"> 
-                            @foreach($notes as $note)
-                                <div class="note group p-6 rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 {{ $note->color_class ?? 'bg-white border-2 border-gray-100' }} relative overflow-hidden" 
-                                        data-title="{{ $note->title }}" data-content="{{ $note->content }}">
+                @if(empty($notes) || $notes->isEmpty())
+                    <div class="text-center p-10 bg-gray-50 rounded-lg">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-16 h-16 mx-auto text-gray-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <h3 class="mt-2 text-lg font-medium text-gray-900">{{ $view_title ?? 'No se encontraron notas' }}</h3>
+                        @if(!isset($view_title) || $view_title == '📝 Mis Notas')
+                            <p class="mt-1 text-sm text-gray-500">¡Crea tu primera nota para empezar!</p>
+                        @endif
+                    </div>
+                @else
+                    {{-- 3. Contenedor de notas con clases base de Tailwind Grid --}}
+                    <div id="notes-list" class="notes-grid grid gap-6 mt-8"> 
+                        @foreach($notes as $note)
+                            {{-- APLICANDO CLASE DE COLOR GARANTIZADA. Usamos bg-white si no tiene color. --}}
+                            <div class="note p-5 rounded-lg shadow-md hover:shadow-lg transition duration-200 ease-in-out {{ $note->color_class ?? 'bg-white border border-gray-200' }}" 
+                                    data-title="{{ $note->title }}" data-content="{{ $note->content }}">
+                                
+                                <h3 class="note-title text-xl font-bold mb-2">{{ $note->title }}</h3>
+                                <div class="note-content text-gray-700 text-sm">{!! nl2br(e($note->content)) !!}</div>
+                                
+                                @auth
+                                <div class="note-actions mt-4 pt-3 border-t border-gray-100 flex items-center space-x-2">
                                     
-                                    {{-- Efecto de brillo sutil en hover --}}
-                                    <div class="absolute inset-0 bg-gradient-to-br from-white/0 to-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                                    
-                                    <div class="relative z-10">
-                                        <h3 class="note-title text-xl font-bold mb-3 text-gray-800 group-hover:text-gray-900 transition-colors line-clamp-2">{{ $note->title }}</h3>
-                                        <div class="note-content text-gray-600 text-sm leading-relaxed line-clamp-6 mb-4">{!! nl2br(e($note->content)) !!}</div>
-                                        
-                                        @auth
-                                        <div class="note-actions pt-4 border-t border-gray-200/50 flex items-center gap-2">
-                                            
-                                            {{-- Marcador Funcional --}}
-                                            @php
-                                                $isLiked = $note->likes->contains(Auth::id()); 
-                                                $likeRoute = $isLiked ? route('notes.unlike', $note) : route('notes.like', $note);
-                                            @endphp
+                                    {{-- **MARCADOR FUNCIONAL (CORAZÓN / FAVORITO)** --}}
+                                    @php
+                                        $isLiked = $note->likes->contains(Auth::id()); 
+                                        $likeRoute = $isLiked ? route('notes.unlike', $note) : route('notes.like', $note);
+                                    @endphp
 
-                                            <form action="{{ $likeRoute }}" method="POST" class="m-0">
-                                                @csrf
-                                                @if ($isLiked)
-                                                    @method('DELETE')
-                                                @endif
-                                                <button type="submit" 
-                                                        class="p-2 rounded-lg text-lg hover:bg-white/70 transition-all duration-200 transform hover:scale-110 {{ $isLiked ? 'text-red-500' : 'text-gray-400' }}" 
-                                                        title="{{ $isLiked ? 'Quitar Favorito' : 'Marcar Favorito' }}">
-                                                    {!! $isLiked ? '❤️' : '🤍' !!}
-                                                </button>
-                                            </form>
-                                            
-                                            @if($note->user_id === Auth::id())
-                                                <a href="{{ route('notes.edit', $note) }}" 
-                                                   class="p-2 rounded-lg text-base text-gray-500 hover:text-indigo-600 hover:bg-indigo-50 transition-all duration-200 transform hover:scale-110" 
-                                                   title="Editar">
-                                                    📝
-                                                </a>
-                                            @endif
-                                            
-                                            @if($note->user_id === Auth::id() || (Auth::user()->role === 'admin'))
-                                                <form action="{{ route('notes.destroy', $note) }}" method="POST" class="m-0 ml-auto">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" 
-                                                            class="p-2 rounded-lg text-base text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all duration-200 transform hover:scale-110" 
-                                                            title="Eliminar" 
-                                                            onclick="return confirm('¿Estás seguro de que quieres eliminar esta nota de forma permanente?');">
-                                                        🗑️
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </div>
-                                        @endauth
-                                    </div>
+                                    <form action="{{ $likeRoute }}" method="POST" class="m-0">
+                                        @csrf
+                                        @if ($isLiked)
+                                            @method('DELETE')
+                                        @endif
+                                        {{-- Botón de Corazón --}}
+                                        <button type="submit" class="p-1 rounded-full text-lg hover:bg-gray-100 transition" title="{{ $isLiked ? 'Quitar Favorito' : 'Marcar Favorito' }}">
+                                            {!! $isLiked ? '❤️' : '🤍' !!}
+                                        </button>
+                                    </form>
+                                    
+                                    {{-- Lógica de Editar y Eliminar --}}
+                                    
+                                    @if($note->user_id === Auth::id())
+                                        {{-- 📝 Editar --}}
+                                        <a href="{{ route('notes.edit', $note) }}" class="p-1 rounded-full text-base text-gray-500 hover:bg-gray-100 transition" title="Editar">
+                                            📝
+                                        </a>
+                                    @endif
+                                    
+                                    @if($note->user_id === Auth::id() || (Auth::user()->role === 'admin'))
+                                        {{-- 🗑️ Eliminar (Permanente) --}}
+                                        <form action="{{ route('notes.destroy', $note) }}" method="POST" class="m-0">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="p-1 rounded-full text-base text-red-500 hover:bg-red-100 transition" title="Eliminar" onclick="return confirm('¿Estás seguro de que quieres eliminar esta nota de forma permanente?');">
+                                                🗑️
+                                            </button>
+                                        </form>
+                                    @endif
                                 </div>
-                            @endforeach
-                        </div>
-                    @endif
-                </div>
+                                @endauth
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
 
+                {{-- 4. Script JS Corregido para usar Clases de Tailwind --}}
                 <script>
                     function changeView(gridClass) {
                         const notesList = document.getElementById('notes-list');
-                        const buttons = document.querySelectorAll('.view-btn');
                         
+                        // Mapeo de la clase del botón a la clase de Tailwind Grid (Responsive)
                         const classMap = {
                             'grid-1': 'grid-cols-1', 
                             'grid-2': 'sm:grid-cols-2',
@@ -269,41 +188,29 @@
                             'grid-4': 'lg:grid-cols-4' 
                         };
                         
+                        // Clases de Tailwind que definen las columnas (para poder eliminarlas)
                         const allGridClasses = ['grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4'];
 
+                        // 1. Elimina todas las clases de cuadrícula responsivas
                         allGridClasses.forEach(cls => notesList.classList.remove(cls));
                         
-                        buttons.forEach(btn => {
-                            btn.classList.remove('bg-blue-100', 'border-blue-500', 'text-blue-700');
-                            btn.classList.add('bg-white', 'border-gray-200', 'text-gray-700');
-                        });
-                        
+                        // 2. Añade la clase base (grid-cols-1) y la clase específica
                         if (gridClass === 'grid-1') {
                              notesList.classList.add(classMap['grid-1']);
                         } else if (classMap[gridClass]) {
+                             // Para 2, 3 o 4 columnas, añadimos la clase base de 1 columna 
+                             // y la clase responsive que indica el número de columnas.
                              notesList.classList.add('grid-cols-1', classMap[gridClass]);
                         }
-                        
-                        event.currentTarget.classList.remove('bg-white', 'border-gray-200', 'text-gray-700');
-                        event.currentTarget.classList.add('bg-blue-100', 'border-blue-500', 'text-blue-700');
-                        
-                        localStorage.setItem('noteViewPreference', gridClass);
                     }
                     
+                    // Inicializa la vista por defecto (grid-3) al cargar la página
                     document.addEventListener('DOMContentLoaded', () => {
                         const notesList = document.getElementById('notes-list');
                         if (notesList) {
+                             // Asegura que el contenedor es un grid
                              notesList.classList.add('grid');
-                             const savedView = localStorage.getItem('noteViewPreference') || 'grid-3';
-                             changeView(savedView);
-                             
-                             const buttons = document.querySelectorAll('.view-btn');
-                             buttons.forEach((btn, idx) => {
-                                 const viewTypes = ['grid-1', 'grid-2', 'grid-3', 'grid-4'];
-                                 if (viewTypes[idx] === savedView) {
-                                     btn.classList.add('bg-blue-100', 'border-blue-500', 'text-blue-700');
-                                 }
-                             });
+                             changeView('grid-3');
                         }
                     });
                 </script>
