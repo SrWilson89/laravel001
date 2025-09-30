@@ -9,30 +9,31 @@ export default {
         './resources/views/**/*.blade.php',
     ],
     
-    // 1. SAFELIST: Para asegurarnos de que estas clases se mantengan aunque no se usen en el HTML base.
+    // 1. SAFELIST: Actualizado para usar el prefijo 'custom-'
     safelist: [
-        'bg-default', 'bg-red', 'bg-orange-red', 'bg-orange', 'bg-yellow-orange', 
-        'bg-yellow', 'bg-yellow-green', 'bg-green', 'bg-blue-green', 'bg-blue', 
-        'bg-blue-violet', 'bg-violet', 'bg-red-violet',
+        'bg-custom-default', 'bg-custom-red', 'bg-custom-orange-red', 'bg-custom-orange', 'bg-custom-yellow-orange', 
+        'bg-custom-yellow', 'bg-custom-yellow-green', 'bg-custom-green', 'bg-custom-blue-green', 'bg-custom-blue', 
+        'bg-custom-blue-violet', 'bg-custom-violet', 'bg-custom-red-violet',
     ],
 
     theme: {
         extend: {
-            // 2. EXTEND COLORS: Aquí definimos el valor hexadecimal para cada clase personalizada (bg-nombre)
+            // 2. EXTEND COLORS: Aquí definimos el valor hexadecimal para cada clase personalizada
+            // Usamos 'custom-' como prefijo para evitar conflictos con la paleta por defecto de Tailwind (ej. 'red-600')
             colors: {
-                'default': '#f8fafc', // Gris muy claro
-                'red': '#fecaca',     // Rojo-200
-                'orange-red': '#fed7aa', // Naranja-200
-                'orange': '#fbbf24',    // Ámbar-400
-                'yellow-orange': '#fde047', // Amarillo-300
-                'yellow': '#fef08a',    // Amarillo-200
-                'yellow-green': '#d9f99d', // Lima-200
-                'green': '#86efad',    // Verde-300
-                'blue-green': '#67e8f9', // Cian-300
-                'blue': '#93c5fd',     // Azul-300
-                'blue-violet': '#a78bfa', // Violeta-400
-                'violet': '#d8b4fe',    // Púrpura-300
-                'red-violet': '#f0abfc', // Magenta-300
+                'custom-default': '#f8fafc', // Gris muy claro
+                'custom-red': '#fecaca',     // Rojo-200
+                'custom-orange-red': '#fed7aa', // Naranja-200
+                'custom-orange': '#fbbf24',    // Ámbar-400
+                'custom-yellow-orange': '#fde047', // Amarillo-300
+                'custom-yellow': '#fef08a',    // Amarillo-200
+                'custom-yellow-green': '#d9f99d', // Lima-200
+                'custom-green': '#86efad',    // Verde-300
+                'custom-blue-green': '#67e8f9', // Cian-300
+                'custom-blue': '#93c5fd',     // Azul-300
+                'custom-blue-violet': '#a78bfa', // Violeta-400
+                'custom-violet': '#d8b4fe',    // Púrpura-300
+                'custom-red-violet': '#f0abfc', // Magenta-300
             },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],

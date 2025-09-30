@@ -1,8 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
+        <div class="flex justify-between items-center">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                {{ __('Perfil') }}
+            </h2>
+            
+            {{-- Botón de Regreso AÑADIDO --}}
+            <a href="{{ route('notes.index') }}" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition text-sm">
+                ⬅️ Volver a Notas
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-12">

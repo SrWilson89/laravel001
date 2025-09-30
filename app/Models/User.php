@@ -27,7 +27,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // Añade 'role' aquí para que sea asignable
+        'role', 
+        'profile_photo_path', // ¡Esta línea es la que permite guardar la ruta de la foto!
     ];
 
     /**
@@ -52,8 +53,7 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    // app/Models/User.php
-
+    
     public function likedNotes()
     {
         return $this->belongsToMany(Note::class, 'note_user_likes');
