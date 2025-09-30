@@ -90,8 +90,8 @@
                     {{-- 3. Contenedor de notas con clases base de Tailwind Grid --}}
                     <div id="notes-list" class="notes-grid grid gap-6 mt-8"> 
                         @foreach($notes as $note)
-                            {{-- Estilo de la tarjeta de nota --}}
-                            <div class="note bg-white p-5 rounded-lg shadow-md hover:shadow-lg transition duration-200 ease-in-out {{ $note->color_class ?? 'border border-gray-200' }}" 
+                            {{-- **LÍNEA CORREGIDA:** Se eliminó bg-white para evitar el conflicto. --}}
+                            <div class="note p-5 rounded-lg shadow-md hover:shadow-lg transition duration-200 ease-in-out {{ $note->color_class ?? 'bg-default border border-gray-200' }}" 
                                  data-title="{{ $note->title }}" data-content="{{ $note->content }}">
                                 
                                 <h3 class="note-title text-xl font-bold mb-2">{{ $note->title }}</h3>
@@ -150,10 +150,10 @@
                         
                         // Mapeo de la clase del botón a la clase de Tailwind Grid (Responsive)
                         const classMap = {
-                            'grid-1': 'grid-cols-1',   // Siempre 1 columna
-                            'grid-2': 'sm:grid-cols-2', // A partir de 'sm' (tablet) 2 columnas
-                            'grid-3': 'md:grid-cols-3', // A partir de 'md' (desktop) 3 columnas
-                            'grid-4': 'lg:grid-cols-4'  // A partir de 'lg' (desktop grande) 4 columnas
+                            'grid-1': 'grid-cols-1', 
+                            'grid-2': 'sm:grid-cols-2',
+                            'grid-3': 'md:grid-cols-3',
+                            'grid-4': 'lg:grid-cols-4' 
                         };
                         
                         // Clases de Tailwind que definen las columnas (para poder eliminarlas)
