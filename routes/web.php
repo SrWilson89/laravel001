@@ -54,9 +54,23 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('password.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Rutas para la gestión de notas (CRUD)
+    // ----------------------------------------------------
+    // CORRECCIÓN: Rutas para la gestión de notas (CRUD)
+    // Se añade la ruta 'show' y la ruta 'public' se define
+    // ANTES de '{note}' para evitar el conflicto.
+    // ----------------------------------------------------
+
+    // Rutas personalizadas que USAN 'notes/...' y tienen una palabra Fija (DEBEN IR PRIMERO)
+    Route::get('/notes/favorites', [NoteController::class, 'favorites'])->name('notes.favorites');
+    Route::get('/notes/public', [NoteController::class, 'publicNotes'])->name('notes.public'); // <-- Corregida para ir aquí
+
+    // Rutas que aceptan el ID o Slug (DEBEN IR DESPUÉS)
     Route::get('/notes/create', [NoteController::class, 'create'])->name('notes.create');
     Route::post('/notes', [NoteController::class, 'store'])->name('notes.store');
+    
+    // 🔑 AÑADIDA RUTA SHOW FALTANTE: notes.show
+    Route::get('/notes/{note}', [NoteController::class, 'show'])->name('notes.show'); 
+    
     Route::get('/notes/{note}/edit', [NoteController::class, 'edit'])->name('notes.edit');
     Route::put('/notes/{note}', [NoteController::class, 'update'])->name('notes.update');
     Route::delete('/notes/{note}', [NoteController::class, 'destroy'])->name('notes.destroy');
@@ -64,8 +78,7 @@ Route::middleware(['auth'])->group(function () {
     // Rutas para la funcionalidad de 'likes' (Favoritos/Corazón)
     Route::post('/notes/{note}/like', [LikeController::class, 'store'])->name('notes.like');
     Route::delete('/notes/{note}/unlike', [LikeController::class, 'destroy'])->name('notes.unlike');
-    Route::get('/notes/favorites', [NoteController::class, 'favorites'])->name('notes.favorites');
-
+    
     // Rutas para Mensajería
     Route::prefix('messages')->name('messages.')->group(function () {
         // Vistas de navegación

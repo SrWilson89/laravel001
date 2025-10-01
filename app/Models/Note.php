@@ -4,40 +4,52 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Note extends Model
+class Note extends Model // <-- ¡CLASE CORREGIDA!
 {
     use HasFactory;
 
+    // Campos que pueden ser asignados masivamente
+    protected $fillable = [
+        'title', 
+        'content', 
+        'color', 
+        'is_public',
+        'user_id'
+    ];
+    
+    // Campos que se deberían castear a tipos nativos
+    protected $casts = [
+        'is_public' => 'boolean',
+    ];
+
     /**
-     * The user that owns the note.
+     * Define la relación de uno a muchos inversa con el modelo User.
+     * Una nota pertenece a un usuario.
      */
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-    
-    // Favoritos (funcionalidad existente)
-    public function likes()
+
+    /**
+     * Define la relación de muchos a muchos con el modelo Tag.
+     * Una nota puede tener muchos tags.
+     */
+    public function tags(): BelongsToMany
     {
+        return $this->belongsToMany(Tag::class);
+    }
+
+    /**
+     * Define la relación de muchos a muchos con el modelo User para los 'likes'.
+     * Una nota puede ser gustada por muchos usuarios.
+     */
+    public function likes(): BelongsToMany
+    {
+        // La tabla pivote es 'note_user_likes'
         return $this->belongsToMany(User::class, 'note_user_likes');
     }
-
-    // Marcadores (nueva funcionalidad)
-    public function bookmarks()
-    {
-        return $this->belongsToMany(User::class, 'note_user_bookmarks');
-    }
-    public function likedNotes()
-    {
-        return $this->belongsToMany(Note::class, 'note_user_likes')->withTimestamps();
-    }
-
-    protected $fillable = [
-        'title',
-        'content',
-        'color_class',
-        'user_id',
-        'is_public'
-    ];
 }

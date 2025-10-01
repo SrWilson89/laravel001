@@ -1,216 +1,243 @@
 <x-app-layout>
-    {{-- 1. Cabecera (Se muestra en la parte superior del layout) --}}
+    {{-- 1. Cabecera --}}
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ $view_title ?? '📝 Mis Notas' }}
         </h2>
     </x-slot>
 
-    {{-- 2. Contenido Principal (Utiliza las clases de espaciado y centrado de Breeze) --}}
+    {{-- 2. Contenido Principal --}}
     <div class="py-6 sm:py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- Contenedor blanco con sombra y padding --}}
-            <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6 lg:p-8"> 
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {{-- Contenedor principal con diseño mejorado --}}
+            <div class="bg-white overflow-hidden shadow-xl sm:rounded-2xl"> 
                 
-                {{-- Mensajes de Éxito o Error (Clases Tailwind para Alerts) --}}
+                {{-- Mensajes de Éxito o Error --}}
                 @if(session('success'))
-                    <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-                        {{ session('success') }}
+                    <div class="mx-6 mt-6 bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 text-green-800 p-4 rounded-r-lg shadow-sm flex items-start space-x-3" role="alert">
+                        <svg class="w-5 h-5 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                        <p class="font-medium">{{ session('success') }}</p>
                     </div>
                 @endif
-                @if(session('error'))
-                    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
-                        {{ session('error') }}
+                
+                {{-- 3. Barra de Navegación de Notas (Públicas, Favoritas, Mensajes) y Perfil --}}
+                <div class="p-4 sm:px-8 bg-gray-50 border-b border-gray-200 flex justify-between items-center text-sm font-medium">
+                    <div class="flex space-x-4">
+                        <a href="{{ route('notes.index') }}" class="text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out">
+                            Mis Notas
+                        </a>
+                        <a href="{{ route('notes.public') }}" class="text-gray-600 hover:text-indigo-600 transition duration-150 ease-in-out">
+                            Notas Públicas
+                        </a>
+                        <a href="{{ route('notes.favorites') }}" class="text-gray-600 hover:text-indigo-600 transition duration-150 ease-in-out flex items-center">
+                            Favoritas
+                        </a>
+                        <a href="{{ route('messages.index') }}" class="text-gray-600 hover:text-indigo-600 transition duration-150 ease-in-out flex items-center">
+                            Mensajes
+                            @php
+                                // Ejemplo de cómo podrías obtener un conteo no leído si estuviera disponible en esta vista
+                                $unread_count = 0; // Reemplazar con la lógica real del controlador
+                            @endphp
+                            @if ($unread_count > 0)
+                                <span class="ml-1.5 px-2 py-0.5 bg-red-500 text-white text-xs rounded-full font-bold leading-none">{{ $unread_count }}</span>
+                            @endif
+                        </a>
                     </div>
-                @endif
-            
-                {{-- Controles (Autenticación, Acciones, Vista) --}}
-                <div class="space-y-6">
                     
-                    {{-- GRUPO: 🔑 Autenticación --}}
-                    <div class="border-b pb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">🔑 Autenticación</label>
-                        <div class="flex flex-wrap items-center space-x-2">
-                            @auth
-                                
-                                {{-- 📸 AVATAR EDITABLE (NUEVO) 📸 --}}
+                    {{-- 4. INFO DE USUARIO LOGUEADO (Avatar, Nombre y Editar Perfil) --}}
+                    @if (Auth::check())
+                        <div class="flex items-center space-x-4">
+                            
+                            {{-- Contenedor de Perfil --}}
+                            <div class="flex items-center space-x-2 bg-white p-2 rounded-full shadow-inner border border-gray-200">
+                                {{-- Imagen de Perfil --}}
                                 @php
-                                    // Accedemos directamente a la fachada Storage.
-                                    $photoUrl = Auth::user()->profile_photo_path 
-                                                ? \Illuminate\Support\Facades\Storage::url(Auth::user()->profile_photo_path) 
-                                                : 'https://placehold.co/40x40/007bff/ffffff?text=U';
+                                    $initial = strtoupper(substr(Auth::user()->name, 0, 1));
                                 @endphp
+                                <img class="h-8 w-8 rounded-full object-cover ring-2 ring-indigo-300" 
+                                    src="{{ Auth::user()->profile_photo_url ?? 'https://placehold.co/100x100/A0B2F2/ffffff?text=' . $initial }}" 
+                                    alt="{{ Auth::user()->name }}"
+                                    onerror="this.onerror=null;this.src='https://placehold.co/100x100/A0B2F2/ffffff?text={{ $initial }}';"
+                                />
 
-                                <a href="{{ route('profile.edit') }}" 
-                                    class="relative block h-10 w-10 rounded-full ring-2 ring-indigo-500 hover:ring-indigo-700 transition duration-150" 
-                                    title="Editar Perfil de {{ Auth::user()->name }}">
-                                    
-                                    {{-- Imagen del Avatar --}}
-                                    <img src="{{ $photoUrl }}" 
-                                        alt="{{ Auth::user()->name }}" 
-                                        class="h-full w-full object-cover rounded-full">
-
-                                    {{-- Icono de Edición (Boli) --}}
-                                    <span class="absolute bottom-0 right-0 h-4 w-4 bg-white rounded-full flex items-center justify-center text-xs shadow-md border border-indigo-500 transition duration-150">
-                                        ✏️
-                                    </span>
+                                {{-- Nombre de Usuario --}}
+                                <span class="text-sm font-bold text-indigo-700 hidden md:inline">{{ Auth::user()->name }}</span>
+                                
+                                {{-- Botón de Editar Perfil (Boli/Lápiz) --}}
+                                <a href="{{ route('profile.edit') }}" title="Editar Perfil" class="text-indigo-500 hover:text-indigo-700 transition duration-150 ease-in-out p-1 rounded-full hover:bg-indigo-50">
+                                    {{-- Icono de Boli (Lápiz) --}}
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
                                 </a>
-                                {{-- FIN AVATAR EDITABLE --}}
-
-
-                                <span class="text-sm font-medium text-gray-600 mr-4">Hola, {{ Auth::user()->name }}</span>
-                                
-                                {{-- ✉️ Mensajes --}}
-                                <a href="{{ route('messages.index') }}" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" title="Mensajes">✉️</a>
-                                
-                                {{-- Aplicamos el nuevo y sofisticado estilo con gradiente --}}
-                                <form action="{{ route('logout') }}" method="POST" class="m-0">
-                                    @csrf
-                                    {{-- 🚪 Cerrar Sesión (BOTÓN ROJO GRADIENTE) --}}
-                                    <button type="submit" 
-                                            class="px-5 py-2.5 bg-gradient-to-r from-red-500 to-red-600 border border-transparent rounded-lg font-bold text-sm text-white uppercase tracking-wider hover:from-red-600 hover:to-red-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center gap-2.5 min-w-max" 
-                                            title="Cerrar Sesión">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                        </svg>
-                                        Cerrar Sesión
-                                    </button>
-                                </form>
-                            @else
-                                <a href="{{ route('login') }}" class="text-sm font-semibold text-gray-700 hover:text-gray-900">🗝️ Login</a>
-                                <a href="{{ route('register') }}" class="text-sm font-semibold text-indigo-600 hover:text-indigo-900">🔑 Registro</a>
-                            @endauth
+                            </div>
+                            
+                            {{-- Enlace de Logout --}}
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-semibold transition duration-150 ease-in-out px-3 py-1 rounded-full border border-red-200 hover:bg-red-50 hidden sm:block">
+                                    Cerrar Sesión
+                                </button>
+                                <button type="submit" title="Cerrar Sesión" class="text-red-600 hover:text-red-800 text-sm font-semibold transition duration-150 ease-in-out p-1 rounded-full hover:bg-red-50 sm:hidden">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                                </button>
+                            </form>
                         </div>
-                    </div>
-
-                    {{-- GRUPO: 🚀 Acciones --}}
-                    <div class="border-b pb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">🚀 Acciones</label>
-                        <div class="flex flex-wrap space-x-2">
-                            <a href="{{ route('notes.index') }}" class="px-4 py-2 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" title="Todas las Notas">🏠 Todas</a>
-                            <a href="{{ route('notes.favorites') }}" class="px-4 py-2 bg-yellow-100 border border-yellow-300 rounded-md text-yellow-700 hover:bg-yellow-200 transition" title="Notas Favoritas">❤️ Favoritas</a>
-                            <a href="{{ route('notes.create') }}" class="px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition" title="Nueva Nota">➕ Nueva Nota</a>
-                        </div>
-                    </div>
-
-                    {{-- GRUPO: 📊 Vista --}}
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">📊 Vista</label>
-                        <div class="flex space-x-2">
-                            <button class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" onclick="changeView('grid-1')" title="1 Columna (Lista)">1</button>
-                            <button class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" onclick="changeView('grid-2')" title="2 Columnas">2</button>
-                            <button class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" onclick="changeView('grid-3')" title="3 Columnas">3</button>
-                            <button class="px-3 py-1 bg-gray-100 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-200 transition" onclick="changeView('grid-4')" title="4 Columna">4</button>
-                        </div>
-                    </div>
+                    @endif
                 </div>
                 
-                <hr class="my-8 border-gray-200">
+                {{-- Controles de Creación y Vista --}}
+                <div class="p-6 sm:px-8 bg-white border-b border-gray-200 flex justify-between items-center">
+                    <a href="{{ route('notes.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-full font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:ring ring-indigo-300 disabled:opacity-25 transition ease-in-out duration-150 shadow-md">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        Nueva Nota
+                    </a>
+                    
+                    {{-- Selector de Vista (Grid) --}}
+                    <div class="flex space-x-2">
+                        <button class="view-btn px-3 py-1 border rounded-lg text-sm transition duration-150 ease-in-out" data-view="grid-1">1 Col</button>
+                        <button class="view-btn px-3 py-1 border rounded-lg text-sm transition duration-150 ease-in-out" data-view="grid-2">2 Cols</button>
+                        <button class="view-btn px-3 py-1 border rounded-lg text-sm transition duration-150 ease-in-out" data-view="grid-3">3 Cols</button>
+                        <button class="view-btn px-3 py-1 border rounded-lg text-sm transition duration-150 ease-in-out" data-view="grid-4">4 Cols</button>
+                    </div>
+                </div>
 
                 {{-- Listado de Notas --}}
-                @if(empty($notes) || $notes->isEmpty())
-                    <div class="text-center p-10 bg-gray-50 rounded-lg">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-16 h-16 mx-auto text-gray-400">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                        </svg>
-                        <h3 class="mt-2 text-lg font-medium text-gray-900">{{ $view_title ?? 'No se encontraron notas' }}</h3>
-                        @if(!isset($view_title) || $view_title == '📝 Mis Notas')
-                            <p class="mt-1 text-sm text-gray-500">¡Crea tu primera nota para empezar!</p>
-                        @endif
-                    </div>
-                @else
-                    {{-- 3. Contenedor de notas con clases base de Tailwind Grid --}}
-                    <div id="notes-list" class="notes-grid grid gap-6 mt-8"> 
-                        @foreach($notes as $note)
-                            {{-- APLICANDO CLASE DE COLOR GARANTIZADA. Usamos bg-white si no tiene color. --}}
-                            <div class="note p-5 rounded-lg shadow-md hover:shadow-lg transition duration-200 ease-in-out {{ $note->color_class ?? 'bg-white border border-gray-200' }}" 
-                                    data-title="{{ $note->title }}" data-content="{{ $note->content }}">
+                <div id="notes-list" class="p-6 sm:px-8 pt-0 grid gap-6">
+                    @forelse ($notes as $note)
+                        {{-- CARD DE LA NOTA --}}
+                        <div class="p-6 border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition duration-300 transform hover:-translate-y-0.5 {{ $note->color ?? 'bg-default' }} flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-xl font-bold mb-2 break-words text-gray-800">{{ $note->title }}</h3>
                                 
-                                <h3 class="note-title text-xl font-bold mb-2">{{ $note->title }}</h3>
-                                <div class="note-content text-gray-700 text-sm">{!! nl2br(e($note->content)) !!}</div>
-                                
-                                @auth
-                                <div class="note-actions mt-4 pt-3 border-t border-gray-100 flex items-center space-x-2">
-                                    
-                                    {{-- **MARCADOR FUNCIONAL (CORAZÓN / FAVORITO)** --}}
-                                    @php
-                                        $isLiked = $note->likes->contains(Auth::id()); 
-                                        $likeRoute = $isLiked ? route('notes.unlike', $note) : route('notes.like', $note);
-                                    @endphp
+                                {{-- Información del Usuario --}}
+                                @if ($note->user_id !== Auth::id())
+                                    <p class="text-xs text-gray-500 mb-2">
+                                        <span class="font-semibold">Creada por:</span> {{ $note->user->name }}
+                                    </p>
+                                @endif
 
-                                    <form action="{{ $likeRoute }}" method="POST" class="m-0">
+                                <p class="text-gray-600 line-clamp-3 mb-4 break-words">{{ $note->content }}</p>
+                            </div>
+
+                            {{-- TAGS --}}
+                            <div class="flex flex-wrap gap-2 mb-4">
+                                @forelse ($note->tags as $tag)
+                                    <span class="inline-flex items-center px-3 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 shadow-sm transition duration-150 ease-in-out hover:bg-indigo-200">
+                                        {{ $tag->name }}
+                                    </span>
+                                @empty
+                                    <span class="text-xs text-gray-400">Sin etiquetas</span>
+                                @endforelse
+                            </div>
+
+                            {{-- Botones de Acción --}}
+                            <div class="flex justify-end space-x-3 mt-2">
+                                {{-- Botón Ver --}}
+                                <a href="{{ route('notes.show', $note) }}" class="text-indigo-600 hover:text-indigo-800 text-sm font-semibold transition duration-150 ease-in-out flex items-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                    Ver
+                                </a>
+
+                                {{-- Botones de Edición y Eliminación (Solo si el usuario puede actualizar/eliminar) --}}
+                                @can('update', $note)
+                                    <a href="{{ route('notes.edit', $note) }}" class="text-blue-600 hover:text-blue-800 text-sm font-semibold transition duration-150 ease-in-out flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                                        Editar
+                                    </a>
+                                @endcan
+
+                                @can('delete', $note)
+                                    {{-- NOTA: Se reemplazará el confirm() con un modal personalizado en el futuro. --}}
+                                    <form action="{{ route('notes.destroy', $note) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta nota?');">
                                         @csrf
-                                        @if ($isLiked)
-                                            @method('DELETE')
-                                        @endif
-                                        {{-- Botón de Corazón --}}
-                                        <button type="submit" class="p-1 rounded-full text-lg hover:bg-gray-100 transition" title="{{ $isLiked ? 'Quitar Favorito' : 'Marcar Favorito' }}">
-                                            {!! $isLiked ? '❤️' : '🤍' !!}
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 hover:text-red-800 text-sm font-semibold transition duration-150 ease-in-out flex items-center">
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                                            Eliminar
                                         </button>
                                     </form>
-                                    
-                                    {{-- Lógica de Editar y Eliminar --}}
-                                    
-                                    @if($note->user_id === Auth::id())
-                                        {{-- 📝 Editar --}}
-                                        <a href="{{ route('notes.edit', $note) }}" class="p-1 rounded-full text-base text-gray-500 hover:bg-gray-100 transition" title="Editar">
-                                            📝
-                                        </a>
-                                    @endif
-                                    
-                                    @if($note->user_id === Auth::id() || (Auth::user()->role === 'admin'))
-                                        {{-- 🗑️ Eliminar (Permanente) --}}
-                                        <form action="{{ route('notes.destroy', $note) }}" method="POST" class="m-0">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="p-1 rounded-full text-base text-red-500 hover:bg-red-100 transition" title="Eliminar" onclick="return confirm('¿Estás seguro de que quieres eliminar esta nota de forma permanente?');">
-                                                🗑️
-                                            </button>
-                                        </form>
-                                    @endif
-                                </div>
-                                @endauth
+                                @endcan
                             </div>
-                        @endforeach
-                    </div>
-                @endif
+                        </div>
+                    @empty
+                        <div class="col-span-full text-center py-10 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h4l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"></path></svg>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">No hay notas</h3>
+                            <p class="mt-1 text-sm text-gray-500">
+                                Empieza creando una nueva nota para organizar tus ideas.
+                            </p>
+                            <div class="mt-6">
+                                <a href="{{ route('notes.create') }}" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Crear Nueva Nota
+                                </a>
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
 
-                {{-- 4. Script JS Corregido para usar Clases de Tailwind --}}
+                {{-- Script para gestionar la vista de la cuadrícula --}}
                 <script>
                     function changeView(gridClass) {
                         const notesList = document.getElementById('notes-list');
-                        
-                        // Mapeo de la clase del botón a la clase de Tailwind Grid (Responsive)
-                        const classMap = {
-                            'grid-1': 'grid-cols-1', 
-                            'grid-2': 'sm:grid-cols-2',
-                            'grid-3': 'md:grid-cols-3',
-                            'grid-4': 'lg:grid-cols-4' 
-                        };
-                        
-                        // Clases de Tailwind que definen las columnas (para poder eliminarlas)
-                        const allGridClasses = ['grid-cols-1', 'sm:grid-cols-2', 'md:grid-cols-3', 'lg:grid-cols-4'];
+                        if (!notesList) return;
 
-                        // 1. Elimina todas las clases de cuadrícula responsivas
-                        allGridClasses.forEach(cls => notesList.classList.remove(cls));
+                        // Limpia todas las clases de cuadrícula existentes
+                        notesList.classList.remove('sm:grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'xl:grid-cols-4');
                         
-                        // 2. Añade la clase base (grid-cols-1) y la clase específica
+                        // Añade la clase de cuadrícula basada en la selección
                         if (gridClass === 'grid-1') {
-                             notesList.classList.add(classMap['grid-1']);
-                        } else if (classMap[gridClass]) {
-                             // Para 2, 3 o 4 columnas, añadimos la clase base de 1 columna 
-                             // y la clase responsive que indica el número de columnas.
-                             notesList.classList.add('grid-cols-1', classMap[gridClass]);
+                            notesList.classList.add('sm:grid-cols-1');
+                            notesList.classList.add('md:grid-cols-1'); // Asegura 1 columna en tablet y móvil
+                        } else if (gridClass === 'grid-2') {
+                            notesList.classList.add('md:grid-cols-2');
+                            notesList.classList.add('sm:grid-cols-1'); // Asegura 1 columna en móvil
+                        } else if (gridClass === 'grid-3') {
+                            notesList.classList.add('lg:grid-cols-3');
+                            notesList.classList.add('md:grid-cols-2');
+                            notesList.classList.add('sm:grid-cols-1');
+                        } else if (gridClass === 'grid-4') {
+                            notesList.classList.add('xl:grid-cols-4');
+                            notesList.classList.add('lg:grid-cols-3');
+                            notesList.classList.add('md:grid-cols-2');
+                            notesList.classList.add('sm:grid-cols-1');
                         }
+                        
+                        // Resalta el botón activo
+                        document.querySelectorAll('.view-btn').forEach(btn => {
+                            btn.classList.remove('bg-blue-100', 'border-blue-500', 'text-blue-700');
+                            btn.classList.add('bg-white', 'border-gray-200', 'text-gray-700');
+                        });
+
+                        const activeBtn = document.querySelector(`.view-btn[data-view="${gridClass}"]`);
+                        if (activeBtn) {
+                            activeBtn.classList.remove('bg-white', 'border-gray-200', 'text-gray-700');
+                            activeBtn.classList.add('bg-blue-100', 'border-blue-500', 'text-blue-700');
+                        }
+                        
+                        localStorage.setItem('noteViewPreference', gridClass);
                     }
                     
-                    // Inicializa la vista por defecto (grid-3) al cargar la página
                     document.addEventListener('DOMContentLoaded', () => {
                         const notesList = document.getElementById('notes-list');
                         if (notesList) {
-                             // Asegura que el contenedor es un grid
-                             notesList.classList.add('grid');
-                             changeView('grid-3');
+                            // Inicializa la lista como grid (solo si no tiene estilos previos)
+                            if (!notesList.classList.contains('grid')) {
+                                notesList.classList.add('grid');
+                            }
+                            
+                            // Asegura la configuración inicial de la cuadrícula
+                            const savedView = localStorage.getItem('noteViewPreference') || 'grid-3';
+                            
+                            // Aplica la vista guardada inmediatamente, esto también maneja el resalte del botón
+                            changeView(savedView);
+                            
+                            const buttons = document.querySelectorAll('.view-btn');
+                            buttons.forEach(btn => {
+                                btn.addEventListener('click', (event) => {
+                                    changeView(event.currentTarget.dataset.view);
+                                });
+                            });
                         }
                     });
                 </script>
@@ -218,4 +245,21 @@
             </div>
         </div>
     </div>
+    
+    {{-- Definición de clases de color de notas personalizadas (pastel y legible) --}}
+    <style>
+        .bg-default { background-color: #ffffff !important; } /* Blanco */
+        .bg-red { background-color: #fee2e2 !important; } /* Rosa muy claro/Rojo */
+        .bg-orange-red { background-color: #ffe6d3 !important; } /* Melocotón claro */
+        .bg-orange { background-color: #ffedd5 !important; } /* Naranja claro */
+        .bg-yellow-orange { background-color: #fff9d5 !important; } /* Amarillo-Naranja */
+        .bg-yellow { background-color: #fef9c3 !important; } /* Amarillo muy claro */
+        .bg-yellow-green { background-color: #eaffd5 !important; } /* Lima muy claro */
+        .bg-green { background-color: #dcfce7 !important; } /* Verde muy claro */
+        .bg-blue-green { background-color: #d5fff4 !important; } /* Turquesa claro */
+        .bg-blue { background-color: #dbeafe !important; } /* Azul muy claro */
+        .bg-blue-violet { background-color: #e0d5ff !important; } /* Lavanda claro */
+        .bg-violet { background-color: #ede9fe !important; } /* Violeta muy claro */
+        .bg-red-violet { background-color: #ffd5f5 !important; } /* Magenta claro */
+    </style>
 </x-app-layout>
